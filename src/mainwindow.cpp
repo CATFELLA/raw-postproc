@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() { delete ui; }
 
-static inline int clamp(uint16_t x, uint16_t minx, uint16_t maxx) {
+static inline int clamp(uint64_t x, uint64_t minx, uint64_t maxx) {
   if (x < minx)
     return minx;
   if (x > maxx)
@@ -44,12 +44,15 @@ void MainWindow::on_develop_button_clicked() {
       for (int x = 0; x < f_width; x++) {
         QRgba64 val;
         if (true) {
-          val.setRed(developed_frame[3 * (y * f_width + x) + 0] *
-                     set.intensity * 10);
-          val.setGreen(developed_frame[3 * (y * f_width + x) + 1] *
-                       set.intensity * 10);
-          val.setBlue(developed_frame[3 * (y * f_width + x) + 2] *
-                      set.intensity * 10);
+          val.setRed(clamp(developed_frame[3 * (y * f_width + x) + 0] *
+                               set.intensity * 10,
+                           0, 65365));
+          val.setGreen(clamp(developed_frame[3 * (y * f_width + x) + 1] *
+                                 set.intensity * 10,
+                             0, 65365));
+          val.setBlue(clamp(developed_frame[3 * (y * f_width + x) + 2] *
+                                set.intensity * 10,
+                            0, 65365));
         } else {
           val.setRed(developed_frame[(y * f_width + x) + 0] * set.intensity *
                      10);
@@ -58,19 +61,21 @@ void MainWindow::on_develop_button_clicked() {
           val.setBlue(developed_frame[(y * f_width + x) + 0] * set.intensity *
                       10);
         }
-        // QRgba64 val;
-        /*val.setRed(framebuffer[3 * (y * images[frame_count].width + x) + 0]);
-        val.setGreen(framebuffer[3 * (y * images[frame_count].width + x) + 1]);
-        val.setBlue(framebuffer[3 * (y * images[frame_count].width + x) + 2]);*/
 
         qimage->setPixelColor(x, y, val);
 
         int mx = 1300;
         if ((x == mx || x == mx + 1 || x == mx + 2) && y == 100) {
-          std::cout << x << " <-x y-> " << y
-                    << " valR =" << developed_frame[3 * (y * f_width + x) + 0]
-                    << " valG =" << developed_frame[3 * (y * f_width + x) + 1]
-                    << " valB =" << developed_frame[3 * (y * f_width + x) + 2]
+          std::cout << x << " <-x y-> " << y << " valR ="
+                    << clamp(developed_frame[3 * (y * f_width + x) + 0] *
+                                 set.intensity * 10,
+                             0, 65365)
+                    << " valG ="
+                    << developed_frame[3 * (y * f_width + x) + 1] *
+                           set.intensity * 10
+                    << " valB ="
+                    << developed_frame[3 * (y * f_width + x) + 2] *
+                           set.intensity * 10
                     << std::endl;
 
           QRgba64 nval;

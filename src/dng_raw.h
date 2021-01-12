@@ -22,6 +22,7 @@ public:
   void prev_frame() override;
   size_t get_width() override;
   size_t get_height() override;
+  int get_white_level() override;
   std::vector<uint16_t> develop(const base_debayer &debayer,
                                 const class settings &settings) override;
 };

@@ -91,7 +91,7 @@ double fclamp(double x, double minx, double maxx) {
   return x;
 }
 
-static uint64_t lclamp(uint64_t x, uint64_t minx, uint64_t maxx) {
+static int64_t lclamp(int64_t x, int64_t minx, int64_t maxx) {
   if (x < minx)
     return minx;
   if (x > maxx)
@@ -101,7 +101,7 @@ static uint64_t lclamp(uint64_t x, uint64_t minx, uint64_t maxx) {
 
 std::vector<uint16_t> pre_color_correction(const std::vector<uint16_t> &in,
                                            int width, int height,
-                                           int black_level) {
+                                           int black_level, int white_level) {
   std::vector<uint16_t> ret(in.size());
 
 #ifdef _OPENMP
@@ -109,12 +109,13 @@ std::vector<uint16_t> pre_color_correction(const std::vector<uint16_t> &in,
 #endif
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
-      uint64_t val = in[y * width + x];
+      int64_t val = in[y * width + x];
 
       // blacklevel is same for all channels cuz whateva...
       val -= black_level;
 
-      ret[y * width + x] = static_cast<uint16_t>(lclamp(val, 0, 65535));
+      ret[y * width + x] =
+          static_cast<uint16_t>(lclamp(val, 0, white_level - black_level));
     }
   }
 
@@ -200,8 +201,8 @@ void compute_color_matrix(double dst[3][3], const double color_matrix[3][3],
   matrix_mult33(dst, xyzD50_to_sRGB, camera_to_xyz);
 }
 
-int64_t gamma_correction(int64_t yps, float gamma) {
-  return std::pow(yps, gamma) * 59;
+int64_t sRGB_gamma_correction(int64_t yps) {
+  return 100 * (1.055 * std::pow(yps, 1 / 2.2) - 0.055);
 }
 
 std::vector<uint16_t> color_correction(const std::vector<uint16_t> &in,
@@ -225,9 +226,9 @@ std::vector<uint16_t> color_correction(const std::vector<uint16_t> &in,
       int64_t B = color_matrix[0][2] * r + color_matrix[1][2] * g +
                   color_matrix[2][2] * b;
 
-      ret[3 * (y * width + x) + 0] = lclamp(gamma_correction(R, 0.6), 0, 65535);
-      ret[3 * (y * width + x) + 1] = lclamp(gamma_correction(G, 0.6), 0, 65535);
-      ret[3 * (y * width + x) + 2] = lclamp(gamma_correction(B, 0.6), 0, 65535);
+      ret[3 * (y * width + x) + 0] = lclamp(sRGB_gamma_correction(R), 0, 65535);
+      ret[3 * (y * width + x) + 1] = lclamp(sRGB_gamma_correction(G), 0, 65535);
+      ret[3 * (y * width + x) + 2] = lclamp(sRGB_gamma_correction(B), 0, 65535);
     }
   }
 

@@ -6,6 +6,8 @@ bool DNG_raw::load_images(std::string file_name) {
   bool ret =
       tinydng::LoadDNG(file_name.c_str(), custom_fields, &images, &warn, &err);
 
+  std::cout << "bps=" << images[0].bits_per_sample << std::endl;
+
   if (!warn.empty()) {
     std::cerr << "ERR: " << err.data() << std::endl;
   }
@@ -25,6 +27,8 @@ void DNG_raw::prev_frame() {
 size_t DNG_raw::get_width() { return images[frame_count].width; }
 size_t DNG_raw::get_height() { return images[frame_count].height; }
 
+int DNG_raw::get_white_level() { return images[frame_count].white_level[0]; }
+
 static uint16_t cclamp(uint16_t x, uint16_t minx, uint16_t maxx) {
   if (x < minx)
     return minx;
@@ -37,13 +41,9 @@ std::vector<uint16_t> DNG_raw::develop(const base_debayer &debayer,
                                        const class settings &settings) {
   std::vector<uint16_t> unpacked = unpack(images[frame_count]);
 
-  // const float inv_scale = 1.0f / (images[frame_count].white_level[0] -
-  //                              images[frame_count].black_level[0]);
-  // needed ?
-
   std::vector<uint16_t> pre_color_corrected = pre_color_correction(
       unpacked, images[frame_count].width, images[frame_count].height,
-      images[frame_count].black_level[0]);
+      images[frame_count].black_level[0], images[frame_count].white_level[0]);
 
   std::cout << "precol" << pre_color_corrected[0] << std::endl;
 
@@ -60,6 +60,8 @@ std::vector<uint16_t> DNG_raw::develop(const base_debayer &debayer,
   std::vector<uint16_t> color_corrected =
       color_correction(debayed, images[frame_count].width,
                        images[frame_count].height, srgb_color_matrix);
+
+  return color_corrected;
 
   std::cout << "colorcor" << color_corrected[0] << std::endl;
 

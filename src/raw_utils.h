@@ -14,7 +14,7 @@ double fclamp(double x, double minx, double maxx);
 
 std::vector<uint16_t> pre_color_correction(const std::vector<uint16_t> &in,
                                            int width, int height,
-                                           int black_level);
+                                           int black_level, int white_level);
 
 void compute_color_matrix(double dst[3][3], const double color_matrix[3][3],
                           const double wb[3]);
