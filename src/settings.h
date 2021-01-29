@@ -7,7 +7,7 @@ public:
 
   double gamma;
   int cfa_offset[2];
-  double raw_white_balance[3];
+  double raw_white_balance[3] = {1, 1, 1};
 
   double hue;
   double saturation;
@@ -20,10 +20,6 @@ public:
     this->gamma = 0.9;
     this->cfa_offset[0] = 0;
     this->cfa_offset[1] = 0;
-
-    this->raw_white_balance[0] = 1.0;
-    this->raw_white_balance[1] = 1.0;
-    this->raw_white_balance[2] = 1.0;
 
     this->hue = 0.0;
     this->saturation = 0.0;

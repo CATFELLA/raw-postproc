@@ -24,11 +24,11 @@ void MainWindow::on_intensity_slider_valueChanged(int value) {
 void MainWindow::on_develop_button_clicked() {
   DNG_raw seq;
 
-  bool ret = seq.load_images("rock.dng");
+  bool ret = seq.load_images("rock2.dng");
 
   if (ret) {
     simple_debayer deb;
-    std::vector<uint16_t> developed_frame = seq.develop(deb, set);
+    std::vector<float> developed_frame = seq.develop(deb, set);
 
     size_t f_width = seq.get_width();
     size_t f_height = seq.get_height();
@@ -44,38 +44,23 @@ void MainWindow::on_develop_button_clicked() {
       for (int x = 0; x < f_width; x++) {
         QRgba64 val;
         if (true) {
-          val.setRed(clamp(developed_frame[3 * (y * f_width + x) + 0] *
-                               set.intensity * 10,
-                           0, 65365));
-          val.setGreen(clamp(developed_frame[3 * (y * f_width + x) + 1] *
-                                 set.intensity * 10,
-                             0, 65365));
-          val.setBlue(clamp(developed_frame[3 * (y * f_width + x) + 2] *
-                                set.intensity * 10,
-                            0, 65365));
+          val.setRed(developed_frame[3 * (y * f_width + x) + 0] * 65365);
+          val.setGreen(developed_frame[3 * (y * f_width + x) + 1] * 65365);
+          val.setBlue(developed_frame[3 * (y * f_width + x) + 2] * 65365);
         } else {
-          val.setRed(developed_frame[(y * f_width + x) + 0] * set.intensity *
-                     10);
-          val.setGreen(developed_frame[(y * f_width + x) + 0] * set.intensity *
-                       10);
-          val.setBlue(developed_frame[(y * f_width + x) + 0] * set.intensity *
-                      10);
+          val.setRed(developed_frame[(y * f_width + x) + 0] * 65365);
+          val.setGreen(developed_frame[(y * f_width + x) + 0] * 65365);
+          val.setBlue(developed_frame[(y * f_width + x) + 0] * 65365);
         }
 
         qimage->setPixelColor(x, y, val);
 
         int mx = 1300;
         if ((x == mx || x == mx + 1 || x == mx + 2) && y == 100) {
-          std::cout << x << " <-x y-> " << y << " valR ="
-                    << clamp(developed_frame[3 * (y * f_width + x) + 0] *
-                                 set.intensity * 10,
-                             0, 65365)
-                    << " valG ="
-                    << developed_frame[3 * (y * f_width + x) + 1] *
-                           set.intensity * 10
-                    << " valB ="
-                    << developed_frame[3 * (y * f_width + x) + 2] *
-                           set.intensity * 10
+          std::cout << x << " <-x y-> " << y
+                    << " valR =" << developed_frame[3 * (y * f_width + x) + 0]
+                    << " valG =" << developed_frame[3 * (y * f_width + x) + 1]
+                    << " valB =" << developed_frame[3 * (y * f_width + x) + 2]
                     << std::endl;
 
           QRgba64 nval;
@@ -94,3 +79,8 @@ void MainWindow::on_develop_button_clicked() {
 }
 
 void MainWindow::on_save_button_clicked() {}
+
+void MainWindow::on_tint_slider_sliderReleased() {
+  set.raw_white_balance[1] = ui->tint_slider->value() / 100.;
+  emit ui->develop_button->clicked();
+}

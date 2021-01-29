@@ -8,8 +8,8 @@ static inline int clamp(int x, int minx, int maxx) {
   return x;
 }
 
-static inline uint16_t fetch(const std::vector<uint16_t> &in, int x, int y,
-                             int w, int h) {
+static inline float fetch(const std::vector<float> &in, int x, int y, int w,
+                          int h) {
   int xx = clamp(x, 0, w - 1);
   int yy = clamp(y, 0, h - 1);
   return in[yy * w + xx];
@@ -17,10 +17,10 @@ static inline uint16_t fetch(const std::vector<uint16_t> &in, int x, int y,
 
 // Simple debayer.
 // debayerOffset = pixel offset to make CFA pattern RGGB.
-std::vector<uint16_t> simple_debayer::debay(const std::vector<uint16_t> &in,
-                                            int width, int height,
-                                            const int debayerOffset[2]) const {
-  std::vector<uint16_t> out(width * height * 3);
+std::vector<float> simple_debayer::debay(const std::vector<float> &in,
+                                         int width, int height,
+                                         const int debayerOffset[2]) const {
+  std::vector<float> out(width * height * 3);
 
 #ifdef _OPENMP
 #pragma omp parallel for
@@ -127,9 +127,9 @@ std::vector<uint16_t> simple_debayer::debay(const std::vector<uint16_t> &in,
         }
       }
 
-      out[3 * (iy * width + ix) + 0] = static_cast<uint16_t>(rgb[0]);
-      out[3 * (iy * width + ix) + 1] = static_cast<uint16_t>(rgb[1]);
-      out[3 * (iy * width + ix) + 2] = static_cast<uint16_t>(rgb[2]);
+      out[3 * (iy * width + ix) + 0] = rgb[0];
+      out[3 * (iy * width + ix) + 1] = rgb[1];
+      out[3 * (iy * width + ix) + 2] = rgb[2];
     }
   }
 

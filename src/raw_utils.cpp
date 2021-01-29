@@ -83,7 +83,7 @@ std::vector<uint16_t> unpack(const tinydng::DNGImage &raw) {
   }
 }
 
-double fclamp(double x, double minx, double maxx) {
+float fclamp(float x, float minx, float maxx) {
   if (x < minx)
     return minx;
   if (x > maxx)
@@ -91,31 +91,21 @@ double fclamp(double x, double minx, double maxx) {
   return x;
 }
 
-static int64_t lclamp(int64_t x, int64_t minx, int64_t maxx) {
-  if (x < minx)
-    return minx;
-  if (x > maxx)
-    return maxx;
-  return x;
-}
+std::vector<float> pre_color_correction(const std::vector<uint16_t> &in,
+                                        int width, int height, int black_level,
+                                        int white_level) {
+  std::vector<float> ret(in.size());
+  float scale_factor = 1 / static_cast<float>(white_level - black_level);
 
-std::vector<uint16_t> pre_color_correction(const std::vector<uint16_t> &in,
-                                           int width, int height,
-                                           int black_level, int white_level) {
-  std::vector<uint16_t> ret(in.size());
-
-#ifdef _OPENMP
 #pragma omp parallel for
-#endif
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
-      int64_t val = in[y * width + x];
+      float val = in[y * width + x];
 
       // blacklevel is same for all channels cuz whateva...
-      val -= black_level;
+      val -= static_cast<float>(black_level);
 
-      ret[y * width + x] =
-          static_cast<uint16_t>(lclamp(val, 0, white_level - black_level));
+      ret[y * width + x] = fclamp(val * scale_factor, 0, 1.0);
     }
   }
 
@@ -157,6 +147,9 @@ static const double xyzD50_to_sRGB[3][3] = {{3.1338561, -1.6168667, -0.4906146},
                                             {-0.9787684, 1.9161415, 0.0334540},
                                             {0.0719453, -0.2289914, 1.4052427}};
 
+static const double xyzD50_to_ProPhoto[3][3] = {
+    {1.3460, -0.2556, -0.0511}, {-0.5446, 1.5082, 0.0205}, {0.0, 0.0, 1.2123}};
+
 static const double xyzD50_to_adobeRGB[3][3] = {
     {1.9624274, -0.6105343, -0.3413404},
     {-0.9787684, 1.9161415, 0.0334540},
@@ -167,7 +160,7 @@ static const double xyzD50_to_widegammut[3][3] = {
     {-0.5217933, 1.4472381, 0.0677227},
     {0.0349342, -0.0968930, 1.2884099}};
 
-void compute_color_matrix(double dst[3][3], const double color_matrix[3][3],
+void compute_color_matrix(double dst[3][3], const tinydng::DNGImage &image,
                           const double wb[3]) {
   //
   // "Mapping Camera Color Space to CIE XYZ Space" DNG spec
@@ -184,51 +177,64 @@ void compute_color_matrix(double dst[3][3], const double color_matrix[3][3],
   // (Unless ForwardMatrix is not available)
 
   // XYZtoCamera = AB * (CC) * CM;
-  double xyz_to_camera[3][3];
+  double xyz_to_camera1[3][3];
+  double xyz_to_camera2[3][3];
 
-  const double analog_balance[3][3] = {
-      {wb[0], 0, 0}, {0, wb[1], 0}, {0, 0, wb[2]}};
+  const double AB[3][3] = {{wb[0], 0, 0}, {0, wb[1], 0}, {0, 0, wb[2]}};
 
-  matrix_mult33(xyz_to_camera, analog_balance, color_matrix);
+  matrix_mult33(xyz_to_camera1, AB, image.camera_calibration1);
+  matrix_mult33(xyz_to_camera2, xyz_to_camera1, image.color_matrix1);
 
-  // camera_to_xyz = Inverse(XYZtoCamer);
   double camera_to_xyz[3][3];
-  inverse_matrix33(camera_to_xyz, xyz_to_camera);
+  inverse_matrix33(camera_to_xyz, xyz_to_camera2);
 
-  // add CB or nah
-  // XYZD50tosRGB * (CB) * CameraToXYZ
+  double camera_to_xyz_D50[3][3];
 
-  matrix_mult33(dst, xyzD50_to_sRGB, camera_to_xyz);
+  matrix_mult33(dst, xyzD50_to_ProPhoto, camera_to_xyz);
 }
 
-int64_t sRGB_gamma_correction(int64_t yps) {
-  return 100 * (1.055 * std::pow(yps, 1 / 2.2) - 0.055);
+// Gamma correction
+
+float ProPhoto_gamma_correction(float yps) {
+  if (yps < 0.001953) {
+    return 16 * yps;
+  } else {
+    return std::pow(yps, 1 / 1.8);
+  }
 }
 
-std::vector<uint16_t> color_correction(const std::vector<uint16_t> &in,
-                                       int width, int height,
-                                       const double color_matrix[3][3]) {
-  std::vector<uint16_t> ret(in.size());
+float sRGB_gamma_correction(float yps) {
+  if (yps <= 0.0031308) {
+    return 12.92 * yps;
+  } else {
+    return 1.055 * std::pow(yps, 1 / 2.2) - 0.055;
+  }
+}
+
+std::vector<float> color_correction(const std::vector<float> &in, int width,
+                                    int height,
+                                    const double color_matrix[3][3]) {
+  std::vector<float> ret(in.size());
 
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
-      uint16_t r = in[3 * (y * width + x) + 0];
-      uint16_t g = in[3 * (y * width + x) + 1];
-      uint16_t b = in[3 * (y * width + x) + 2];
+      float r = in[3 * (y * width + x) + 0];
+      float g = in[3 * (y * width + x) + 1];
+      float b = in[3 * (y * width + x) + 2];
 
-      int64_t R = color_matrix[0][0] * r + color_matrix[1][0] * g +
-                  color_matrix[2][0] * b;
-      int64_t G = color_matrix[0][1] * r + color_matrix[1][1] * g +
-                  color_matrix[2][1] * b;
-      int64_t B = color_matrix[0][2] * r + color_matrix[1][2] * g +
-                  color_matrix[2][2] * b;
+      float R = color_matrix[0][0] * r + color_matrix[1][0] * g +
+                color_matrix[2][0] * b;
+      float G = color_matrix[0][1] * r + color_matrix[1][1] * g +
+                color_matrix[2][1] * b;
+      float B = color_matrix[0][2] * r + color_matrix[1][2] * g +
+                color_matrix[2][2] * b;
 
-      ret[3 * (y * width + x) + 0] = lclamp(sRGB_gamma_correction(R), 0, 65535);
-      ret[3 * (y * width + x) + 1] = lclamp(sRGB_gamma_correction(G), 0, 65535);
-      ret[3 * (y * width + x) + 2] = lclamp(sRGB_gamma_correction(B), 0, 65535);
+      ret[3 * (y * width + x) + 0] = fclamp(ProPhoto_gamma_correction(R), 0, 1);
+      ret[3 * (y * width + x) + 1] = fclamp(ProPhoto_gamma_correction(G), 0, 1);
+      ret[3 * (y * width + x) + 2] = fclamp(ProPhoto_gamma_correction(B), 0, 1);
     }
   }
 

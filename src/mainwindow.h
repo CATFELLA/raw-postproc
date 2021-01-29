@@ -36,6 +36,8 @@ private slots:
 
   void on_save_button_clicked();
 
+  void on_tint_slider_sliderReleased();
+
 private:
   Ui::MainWindow *ui;
   QGraphicsScene *scene;

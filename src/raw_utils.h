@@ -10,17 +10,17 @@
 
 std::vector<uint16_t> unpack(const tinydng::DNGImage &raw);
 
-double fclamp(double x, double minx, double maxx);
+float fclamp(float x, float minx, float maxx);
 
-std::vector<uint16_t> pre_color_correction(const std::vector<uint16_t> &in,
-                                           int width, int height,
-                                           int black_level, int white_level);
+std::vector<float> pre_color_correction(const std::vector<uint16_t> &in,
+                                        int width, int height, int black_level,
+                                        int white_level);
 
-void compute_color_matrix(double dst[3][3], const double color_matrix[3][3],
+void compute_color_matrix(double dst[3][3], const tinydng::DNGImage &image,
                           const double wb[3]);
 
-std::vector<uint16_t> color_correction(const std::vector<uint16_t> &in,
-                                       int width, int height,
-                                       const double color_matrix[3][3]);
+std::vector<float> color_correction(const std::vector<float> &in, int width,
+                                    int height,
+                                    const double color_matrix[3][3]);
 
 #endif // RAW_UTILS_H

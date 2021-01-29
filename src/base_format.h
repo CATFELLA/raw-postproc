@@ -16,6 +16,6 @@ public:
   virtual size_t get_width() = 0;
   virtual size_t get_height() = 0;
   virtual int get_white_level() = 0;
-  virtual std::vector<uint16_t> develop(const base_debayer &debayer,
-                                        const class settings &settings) = 0;
+  virtual std::vector<float> develop(const base_debayer &debayer,
+                                     const class settings &settings) = 0;
 };
