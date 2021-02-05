@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1800</width>
-    <height>965</height>
+    <width>1920</width>
+    <height>1080</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,15 +19,15 @@
      <rect>
       <x>3</x>
       <y>0</y>
-      <width>1611</width>
-      <height>1000</height>
+      <width>1711</width>
+      <height>1031</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="develop_button">
     <property name="geometry">
      <rect>
-      <x>1650</x>
+      <x>1760</x>
       <y>10</y>
       <width>80</width>
       <height>23</height>
@@ -40,8 +40,8 @@
    <widget class="QSlider" name="intensity_slider">
     <property name="geometry">
      <rect>
-      <x>1620</x>
-      <y>70</y>
+      <x>1720</x>
+      <y>100</y>
       <width>160</width>
       <height>16</height>
      </rect>
@@ -62,20 +62,23 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>1670</x>
-      <y>50</y>
-      <width>57</width>
-      <height>15</height>
+      <x>1760</x>
+      <y>80</y>
+      <width>81</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Intensity</string>
+     <string>Contrast</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QPushButton" name="save_button">
     <property name="geometry">
      <rect>
-      <x>1650</x>
+      <x>1760</x>
       <y>400</y>
       <width>80</width>
       <height>23</height>
@@ -88,8 +91,8 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>1690</x>
-      <y>90</y>
+      <x>1770</x>
+      <y>120</y>
       <width>57</width>
       <height>15</height>
      </rect>
@@ -97,12 +100,15 @@
     <property name="text">
      <string>Tint</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
    </widget>
    <widget class="QSlider" name="tint_slider">
     <property name="geometry">
      <rect>
-      <x>1620</x>
-      <y>110</y>
+      <x>1720</x>
+      <y>140</y>
       <width>160</width>
       <height>16</height>
      </rect>
@@ -129,18 +135,104 @@
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>1720</x>
+      <y>150</y>
+      <width>57</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>G</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>1870</x>
+      <y>150</y>
+      <width>57</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>M</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>1760</x>
+      <y>40</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Brightness</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QSlider" name="intensity_slider_2">
+    <property name="geometry">
+     <rect>
+      <x>1720</x>
+      <y>60</y>
+      <width>160</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-100</number>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1800</width>
+     <width>1920</width>
      <height>20</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_DNG"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen_DNG">
+   <property name="text">
+    <string>Open DNG...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

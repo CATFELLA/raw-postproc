@@ -91,13 +91,15 @@ float fclamp(float x, float minx, float maxx) {
   return x;
 }
 
-std::vector<float> pre_color_correction(const std::vector<uint16_t> &in,
-                                        int width, int height, int black_level,
-                                        int white_level) {
-  std::vector<float> ret(in.size());
+void pre_color_correction(std::vector<float> &ret,
+                          const std::vector<uint16_t> &in, int width,
+                          int height, int black_level, int white_level) {
+  ret.resize(in.size());
   float scale_factor = 1 / static_cast<float>(white_level - black_level);
 
+#ifdef _OPENMP
 #pragma omp parallel for
+#endif
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
       float val = in[y * width + x];
@@ -108,8 +110,6 @@ std::vector<float> pre_color_correction(const std::vector<uint16_t> &in,
       ret[y * width + x] = fclamp(val * scale_factor, 0, 1.0);
     }
   }
-
-  return ret;
 }
 
 static void matrix_mult33(double dst[3][3], const double a[3][3],
@@ -196,24 +196,23 @@ void compute_color_matrix(double dst[3][3], const tinydng::DNGImage &image,
 // Gamma correction
 
 float ProPhoto_gamma_correction(float yps) {
-  if (yps < 0.001953) {
+  if (yps < 0.001953f) {
     return 16 * yps;
   } else {
-    return std::pow(yps, 1 / 1.8);
+    return std::pow(yps, 1 / 1.8f);
   }
 }
 
 float sRGB_gamma_correction(float yps) {
-  if (yps <= 0.0031308) {
-    return 12.92 * yps;
+  if (yps <= 0.0031308f) {
+    return 12.92f * yps;
   } else {
-    return 1.055 * std::pow(yps, 1 / 2.2) - 0.055;
+    return 1.055f * std::pow(yps, 1 / 2.2f) - 0.055f;
   }
 }
 
-std::vector<float> color_correction(const std::vector<float> &in, int width,
-                                    int height,
-                                    const double color_matrix[3][3]) {
+void color_correction(std::vector<float> &in, int width, int height,
+                      const double color_matrix[3][3]) {
   std::vector<float> ret(in.size());
 
 #ifdef _OPENMP
@@ -232,11 +231,9 @@ std::vector<float> color_correction(const std::vector<float> &in, int width,
       float B = color_matrix[0][2] * r + color_matrix[1][2] * g +
                 color_matrix[2][2] * b;
 
-      ret[3 * (y * width + x) + 0] = fclamp(ProPhoto_gamma_correction(R), 0, 1);
-      ret[3 * (y * width + x) + 1] = fclamp(ProPhoto_gamma_correction(G), 0, 1);
-      ret[3 * (y * width + x) + 2] = fclamp(ProPhoto_gamma_correction(B), 0, 1);
+      in[3 * (y * width + x) + 0] = fclamp(ProPhoto_gamma_correction(R), 0, 1);
+      in[3 * (y * width + x) + 1] = fclamp(ProPhoto_gamma_correction(G), 0, 1);
+      in[3 * (y * width + x) + 2] = fclamp(ProPhoto_gamma_correction(B), 0, 1);
     }
   }
-
-  return ret;
 }

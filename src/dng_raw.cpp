@@ -3,25 +3,31 @@
 bool DNG_raw::load_images(std::string file_name) {
   std::string warn, err;
 
+  // not loading a sequence
   bool ret =
       tinydng::LoadDNG(file_name.c_str(), custom_fields, &images, &warn, &err);
+
+  if (!warn.empty()) {
+    std::cerr << warn << std::endl;
+  }
+
+  if (!err.empty()) {
+    throw std::runtime_error(err);
+  }
 
   std::cout << "bps=" << images[0].bits_per_sample << std::endl;
   std::cout << "sample format" << images[0].sample_format << std::endl;
   std::cout << "black level " << images[0].black_level[0] << std::endl;
   std::cout << "white level " << images[0].white_level[0] << std::endl;
 
-  if (!warn.empty()) {
-    std::cerr << err.data() << std::endl;
-  }
-  if (!err.empty()) {
-    std::cerr << "ERR: " << err.data() << std::endl;
-  }
-
   return ret;
 }
 
-void DNG_raw::next_frame() { frame_count = (frame_count + 1) % images.size(); }
+void DNG_raw::next_frame() {
+  std::cout << "new frame is " << (frame_count + 1) % images.size()
+            << std::endl;
+  frame_count = (frame_count + 1) % images.size();
+}
 void DNG_raw::prev_frame() {
   frame_count =
       (frame_count - 1 > images.size()) ? images.size() - 1 : frame_count - 1;
@@ -44,11 +50,11 @@ std::vector<float> DNG_raw::develop(const base_debayer &debayer,
                                     const class settings &settings) {
   std::vector<uint16_t> unpacked = unpack(images[frame_count]);
 
-  std::vector<float> pre_color_corrected = pre_color_correction(
-      unpacked, images[frame_count].width, images[frame_count].height,
-      images[frame_count].black_level[0], images[frame_count].white_level[0]);
-
-  // return pre_color_corrected;
+  std::vector<float> pre_color_corrected;
+  pre_color_correction(pre_color_corrected, unpacked, images[frame_count].width,
+                       images[frame_count].height,
+                       images[frame_count].black_level[0],
+                       images[frame_count].white_level[0]);
 
   std::cout << "precol" << pre_color_corrected[0] << std::endl;
 
@@ -65,13 +71,12 @@ std::vector<float> DNG_raw::develop(const base_debayer &debayer,
   compute_color_matrix(srgb_color_matrix, images[frame_count],
                        settings.raw_white_balance);
 
-  std::vector<float> color_corrected =
-      color_correction(debayed, images[frame_count].width,
-                       images[frame_count].height, srgb_color_matrix);
+  color_correction(debayed, images[frame_count].width,
+                   images[frame_count].height, srgb_color_matrix);
 
-  return color_corrected;
+  return debayed;
 
-  std::cout << "colorcor" << color_corrected[0] << std::endl;
+  std::cout << "colorcor" << debayed[0] << std::endl;
 
   std::cout << "btw the black level is" << images[frame_count].black_level[0]
             << std::endl;
