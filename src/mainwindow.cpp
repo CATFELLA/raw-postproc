@@ -32,6 +32,9 @@ void MainWindow::handle_frame(std::shared_ptr<std::vector<float>> frame) {
   int f_width = static_cast<int>(seq->get_width());
   int f_height = static_cast<int>(seq->get_height());
 
+  std::cout << "handling width=" << f_width << " height=" << f_height
+            << std::endl;
+
   QImage qimage(f_width, f_height, QImage::Format_RGBX64);
 
   struct rgba64 {

@@ -15,6 +15,8 @@ bool DNG_raw::load_images(std::string file_name) {
     throw std::runtime_error(err);
   }
 
+  std::cout << "height=" << images[0].height << std::endl;
+  std::cout << "width=" << images[0].width << std::endl;
   std::cout << "bps=" << images[0].bits_per_sample << std::endl;
   std::cout << "sample format" << images[0].sample_format << std::endl;
   std::cout << "black level " << images[0].black_level[0] << std::endl;

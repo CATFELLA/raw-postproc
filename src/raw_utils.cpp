@@ -162,21 +162,6 @@ static const double xyzD50_to_widegammut[3][3] = {
 
 void compute_color_matrix(double dst[3][3], const tinydng::DNGImage &image,
                           const double wb[3]) {
-  //
-  // "Mapping Camera Color Space to CIE XYZ Space" DNG spec
-  //
-  // CM = ColorMatrix
-  // CC = CameraCalibration
-  // AB = AnalogBalance
-  // RM = ReductionMatrix
-  // FM = ForwardMatrix
-  //
-
-  // CM(Color Matrix) is a matrix which converts XYZ value to camera space,
-  // Thus we need to invert it to get XYZ value from camera's raw censor value
-  // (Unless ForwardMatrix is not available)
-
-  // XYZtoCamera = AB * (CC) * CM;
   double xyz_to_camera1[3][3];
   double xyz_to_camera2[3][3];
 
@@ -186,7 +171,7 @@ void compute_color_matrix(double dst[3][3], const tinydng::DNGImage &image,
   matrix_mult33(xyz_to_camera2, xyz_to_camera1, image.color_matrix1);
 
   double camera_to_xyz[3][3];
-  inverse_matrix33(camera_to_xyz, xyz_to_camera2);
+  inverse_matrix33(camera_to_xyz, xyz_to_camera1);
 
   double camera_to_xyz_D50[3][3];
 

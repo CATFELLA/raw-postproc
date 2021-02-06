@@ -21,7 +21,5 @@ void renderer::run() {
       std::make_shared<std::vector<float>>();
   *result = _file->develop(*_debayer.get(), *_set.get());
 
-  _file->next_frame();
-
   emit frame_ready(result);
 }
