@@ -18,6 +18,21 @@ Raw-кадр является набором значений с матрицы,
 
 \section{Формат файла.}
 
+\begin{table}[h]
+	\begin{center}
+		\caption{Используемая информация о изображении.}
+		\label{tbl:log}
+		\resizebox{16cm}{!}{
+			\begin{tabular}{|c|c|}
+				\hline
+				\bfseries Этап обработки & \bfseries Необходимая информация \\ \hline
+				Распаковка & BitsPerSample \\ \hline
+				Предварительная обработка & WhiteLevel, BlackLevel \\ \hline
+				Коррекция цвета & ColorMatrix, CameraCalibration \\ \hline
+		\end{tabular}}
+	\end{center}
+\end{table}
+
 \subsection{DNG}
 
 Digital Negative (DNG) --- формат хранения raw-изображений, основан на формате изображений TIFF. CinemaDNG является форматом хранения raw-видео и представляет собой набор DNG файлов. 
