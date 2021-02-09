@@ -48,6 +48,8 @@ private slots:
 
   void on_actionExit_triggered();
 
+  void on_brightness_slider_sliderReleased();
+
 private:
   Ui::MainWindow *ui;
   QGraphicsScene *scene;

@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
   scene = new QGraphicsScene(this);
 
   set.reset(new settings);
+  set->brightness = 0.1;
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -55,7 +56,7 @@ void MainWindow::handle_frame(std::shared_ptr<std::vector<float>> frame) {
       bits[y * f_width + x].blue = (*frame)[3 * (y * f_width + x) + 2] * 65365;
 
 #define MX 1300
-#define YX 100
+#define YX 300
       if ((x == MX || x == MX + 1 || x == MX + 2) && y == YX) {
         std::cout << x << " <-x y-> " << y
                   << " valR =" << qimage.pixelColor(x, y).red()
@@ -106,3 +107,8 @@ void MainWindow::on_actionOpen_DNG_triggered() {
 }
 
 void MainWindow::on_actionExit_triggered() { QApplication::quit(); }
+
+void MainWindow::on_brightness_slider_sliderReleased() {
+  // CHTO
+  emit ui->develop_button->clicked();
+}

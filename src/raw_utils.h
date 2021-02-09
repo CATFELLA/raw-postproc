@@ -22,4 +22,7 @@ void compute_color_matrix(double dst[3][3], const tinydng::DNGImage &image,
 void color_correction(std::vector<float> &in, int width, int height,
                       const double color_matrix[3][3]);
 
+void brightness(std::vector<float> &in, int width, int height,
+                const double intesity);
+
 #endif // RAW_UTILS_H

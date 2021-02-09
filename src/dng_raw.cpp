@@ -76,15 +76,10 @@ std::vector<float> DNG_raw::develop(const base_debayer &debayer,
   color_correction(debayed, images[frame_count].width,
                    images[frame_count].height, srgb_color_matrix);
 
+  brightness(debayed, images[frame_count].width, images[frame_count].height,
+             settings.brightness);
+
   return debayed;
-
-  std::cout << "colorcor" << debayed[0] << std::endl;
-
-  std::cout << "btw the black level is" << images[frame_count].black_level[0]
-            << std::endl;
-
-  std::vector<float> res(images[frame_count].width *
-                         images[frame_count].height * 3);
   /*
   #ifdef _OPENMP
   #pragma omp parallel for

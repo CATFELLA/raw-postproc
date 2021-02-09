@@ -198,8 +198,6 @@ float sRGB_gamma_correction(float yps) {
 
 void color_correction(std::vector<float> &in, int width, int height,
                       const double color_matrix[3][3]) {
-  std::vector<float> ret(in.size());
-
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
@@ -219,6 +217,26 @@ void color_correction(std::vector<float> &in, int width, int height,
       in[3 * (y * width + x) + 0] = fclamp(ProPhoto_gamma_correction(R), 0, 1);
       in[3 * (y * width + x) + 1] = fclamp(ProPhoto_gamma_correction(G), 0, 1);
       in[3 * (y * width + x) + 2] = fclamp(ProPhoto_gamma_correction(B), 0, 1);
+    }
+  }
+}
+
+void brightness(std::vector<float> &in, int width, int height,
+                const double intesity) {
+  if (std::fabs(intesity) > __DBL_EPSILON__) {
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        in[3 * (y * width + x) + 0] =
+            fclamp(in[3 * (y * width + x) + 0] + intesity, 0, 1);
+        in[3 * (y * width + x) + 1] =
+            fclamp(in[3 * (y * width + x) + 1] + intesity, 0, 1);
+        in[3 * (y * width + x) + 2] =
+            fclamp(in[3 * (y * width + x) + 2] + intesity, 0, 1);
+        // slow... (change fclamp to a modifying func
+      }
     }
   }
 }

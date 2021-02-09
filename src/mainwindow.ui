@@ -177,7 +177,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QSlider" name="intensity_slider_2">
+   <widget class="QSlider" name="brightness_slider">
     <property name="geometry">
      <rect>
       <x>1720</x>
