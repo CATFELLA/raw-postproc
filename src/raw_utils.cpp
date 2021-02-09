@@ -171,7 +171,7 @@ void compute_color_matrix(double dst[3][3], const tinydng::DNGImage &image,
   matrix_mult33(xyz_to_camera2, xyz_to_camera1, image.color_matrix1);
 
   double camera_to_xyz[3][3];
-  inverse_matrix33(camera_to_xyz, xyz_to_camera1);
+  inverse_matrix33(camera_to_xyz, xyz_to_camera2);
 
   double camera_to_xyz_D50[3][3];
 
