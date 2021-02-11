@@ -17,6 +17,7 @@ SOURCES += \
     src/dng_raw.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
+    src/mhc_debayer.cpp \
     src/raw_utils.cpp \
     src/renderer.cpp \
     src/settings.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     src/colored_bayer.h \
     src/dng_raw.h \
     src/mainwindow.h \
+    src/mhc_debayer.h \
     src/raw_utils.h \
     src/renderer.h \
     src/settings.h \
