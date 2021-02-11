@@ -80,25 +80,4 @@ std::vector<float> DNG_raw::develop(const base_debayer &debayer,
              settings.brightness);
 
   return debayed;
-  /*
-  #ifdef _OPENMP
-  #pragma omp parallel for
-  #endif
-    for (size_t y = 0; y < images[frame_count].height; y++) {
-      for (size_t x = 0; x < images[frame_count].width; x++) {
-        res[3 * (y * images[frame_count].width + x) + 0] = cclamp(
-            settings.intensity *
-                color_corrected[3 * (y * images[frame_count].width + x) + 0],
-            0, 65535);
-        res[3 * (y * images[frame_count].width + x) + 1] = cclamp(
-            settings.intensity *
-                color_corrected[3 * (y * images[frame_count].width + x) + 1],
-            0, 65535);
-        res[3 * (y * images[frame_count].width + x) + 2] = cclamp(
-            settings.intensity *
-                color_corrected[3 * (y * images[frame_count].width + x) + 2],
-            0, 65535);
-      }
-    }
-    */
 }

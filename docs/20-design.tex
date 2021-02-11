@@ -1,4 +1,111 @@
 \chapter{Конструкторская часть}
 
+В данном разделе представлены требования к программному обеспечению, а также схемы выбранных для решения поставленной задачи алгоритма.
+
+\section{Требования к программному обеспечению}
+
+Программа должна предоставлять доступ к функционалу:
+\begin{itemize}
+	\item открытие DNG последовательностей;
+	\item настройка параметров изображения;
+	\item выбор показываемого кадра
+	\item проигрывание кадров;
+	\item сохранение обработанного видео (<----- не успею наверное...).
+\end{itemize}
+
+К программе предъявляются следующие требования:
+\begin{itemize}
+	\item время обработки кадра должно быть менее 1/30 секунды для проигрывания основных частот кадров.
+\end{itemize}
+
+\subsection{Алгоритм билинейной интерполяции}
+\clearpage
+\begin{algorithm}[H]
+	\caption{Билинейная интерполяция}
+	\label{alg:analchange}
+	\begin{algorithmic}[1]
+		\State $in$ $\gets$ вектор с данными с сенсора камеры
+		\State $height$ $\gets$ высота изображения $DomColor$
+		\State $width$ $\gets$ ширина изображения
+		\State $out$ $\gets$ вектор с интерполированными цветами
+		\For{$y \gets 0$ to $height$}
+			\For{$x \gets 0$ to $width$}
+			\State $C$ $\gets$ значение цвета в точке $x,y$
+			\If {$y$ четное}
+				\If {$x$ четное}
+					\State $out_{3 * (y * width + x) + 0}$ $\gets$ $C$
+					\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4$
+					\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x-1, y-1} + in_{x-1, y+1} + in_{x+1, y-1} + in_{x+1, y+1}) / 4$
+				\Else
+					\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2$
+					\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
+					\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2$
+				\EndIf
+			\Else
+				\If {$x$ четное}
+					\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2$
+					\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
+					\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2$
+				\Else
+					\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x-1, y-1} + in_{x-1, y+1} + in_{x+1, y-1} + in_{x+1, y+1}) / 4$
+					\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4$
+					\State $out_{3 * (y * width + x) + 2}$ $\gets$ $C$
+				\EndIf
+			\EndIf
+		\EndFor
+	\EndFor
+	\end{algorithmic}
+\end{algorithm}
+
+\subsection{Алгоритм интерполяции Malvar-He-Cutler}
+\clearpage
+\begin{algorithm}[H]
+	\caption{Билинейная интерполяция}
+	\label{alg:analchange}
+	\begin{algorithmic}[1]
+		\State $in$ $\gets$ вектор с данными с сенсора камеры
+		\State $height$ $\gets$ высота изображения $DomColor$
+		\State $width$ $\gets$ ширина изображения
+		\State $out$ $\gets$ вектор с интерполированными цветами
+		\For{$y \gets 0$ to $height$}
+		\For{$x \gets 0$ to $width$}
+		\State $C$ $\gets$ значение цвета в точке $x,y$
+		\If {$y$ четное}
+		\If {$x$ четное}
+		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $C$
+		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4$
+		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x-1, y-1} + in_{x-1, y+1} + in_{x+1, y-1} + in_{x+1, y+1}) / 4$
+		\Else
+		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2$
+		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
+		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2$
+		\EndIf
+		\Else
+		\If {$x$ четное}
+		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2$
+		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
+		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2$
+		\Else
+		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x-1, y-1} + in_{x-1, y+1} + in_{x+1, y-1} + in_{x+1, y+1}) / 4$
+		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4$
+		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $C$
+		\EndIf
+		\EndIf
+		\EndFor
+		\EndFor
+	\end{algorithmic}
+\end{algorithm}
+
+%\img{190mm}{triangulation}{Схема алгоритма триангуляции мышцы}
+
+\clearpage
+\subsection{Алгоритм синтеза изображения}
+
+На рисунке \ref{img:graphics} представлена блок-схема алгоритма синтеза изображения.
+
+%\img{190mm}{graphics}{Блок-схема алгоритма синтеза изображения}
+
 \section*{Вывод}
+
+В данном разделе были представлены требования к программному обеспечению и разработаны схемы реализуемых алгоритмов.
 

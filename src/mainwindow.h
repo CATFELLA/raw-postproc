@@ -15,6 +15,7 @@
 
 #include "colored_bayer.h"
 #include "dng_raw.h"
+#include "mhc_debayer.h"
 #include "renderer.h"
 #include "settings.h"
 #include "simple_debayer.h"
