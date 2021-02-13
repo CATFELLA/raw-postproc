@@ -61,10 +61,7 @@ static std::vector<uint16_t> unpack16(const unsigned char *data, int width,
 #endif
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
-      uint16_t val = ptr[y * width + x];
-
-      // [0, 65535]
-      ret[y * width + x] = val;
+      ret[y * width + x] = ptr[y * width + x];
     }
   }
 
