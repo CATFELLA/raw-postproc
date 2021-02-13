@@ -6,7 +6,7 @@
 #include <cstring>
 #include <vector>
 
-#include "tiny_dng_loader.h"
+#include "../lib/tiny_dng_loader.h"
 
 std::vector<uint16_t> unpack(const tinydng::DNGImage &raw);
 

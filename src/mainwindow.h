@@ -13,13 +13,13 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define TINY_DNG_NO_EXCEPTION
 
+#include "../lib/tiny_dng_loader.h"
 #include "colored_bayer.h"
 #include "dng_raw.h"
 #include "mhc_debayer.h"
 #include "renderer.h"
 #include "settings.h"
 #include "simple_debayer.h"
-#include "tiny_dng_loader.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

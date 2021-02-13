@@ -5,9 +5,9 @@
 #include <cmath>
 #include <iostream>
 
+#include "../lib/tiny_dng_loader.h"
 #include "base_format.h"
 #include "raw_utils.h"
-#include "tiny_dng_loader.h"
 
 class DNG_raw : public base_format {
   size_t frame_count = 0;

@@ -22,7 +22,7 @@
 \clearpage
 \begin{algorithm}[H]
 	\caption{Билинейная интерполяция}
-	\label{alg:analchange}
+	\label{alg:bilin}
 	\begin{algorithmic}[1]
 		\State $in$ $\gets$ вектор с данными с сенсора камеры
 		\State $height$ $\gets$ высота изображения $DomColor$
@@ -31,26 +31,25 @@
 		\For{$y \gets 0$ to $height$}
 			\For{$x \gets 0$ to $width$}
 			\State $C$ $\gets$ значение цвета в точке $x,y$
-			\If {$y$ четное}
-				\If {$x$ четное}
+			\If {пиксель красный}
 					\State $out_{3 * (y * width + x) + 0}$ $\gets$ $C$
 					\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4$
 					\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x-1, y-1} + in_{x-1, y+1} + in_{x+1, y-1} + in_{x+1, y+1}) / 4$
-				\Else
+			\EndIf
+			\If {пиксель зеленый И соседи красные}
 					\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2$
 					\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
 					\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2$
-				\EndIf
-			\Else
-				\If {$x$ четное}
+			\EndIf
+			\If {пиксель зеленый И соседи синие}
 					\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2$
 					\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
 					\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2$
-				\Else
+			\EndIf
+			\If {пиксель синий}
 					\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x-1, y-1} + in_{x-1, y+1} + in_{x+1, y-1} + in_{x+1, y+1}) / 4$
 					\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4$
 					\State $out_{3 * (y * width + x) + 2}$ $\gets$ $C$
-				\EndIf
 			\EndIf
 		\EndFor
 	\EndFor
@@ -59,36 +58,40 @@
 
 \subsection{Алгоритм интерполяции Malvar-He-Cutler}
 \begin{algorithm}[H]
-	\caption{Билинейная интерполяция}
-	\label{alg:analchange}
+	\caption{Malvar-He-Cutler}
+	\label{alg:mhc}
 	\begin{algorithmic}[1]
 		\State $in$ $\gets$ вектор с данными с сенсора камеры
 		\State $height$ $\gets$ высота изображения $DomColor$
 		\State $width$ $\gets$ ширина изображения
 		\State $out$ $\gets$ вектор с интерполированными цветами
+		\State $\alpha$ $\gets$ $\frac{1}{2}$
+		\State $\beta$ $\gets$ $\frac{5}{8}$
+		\State $\gamma$ $\gets$ $\frac{3}{4}$
 		\For{$y \gets 0$ to $height$}
 		\For{$x \gets 0$ to $width$}
 		\State $C$ $\gets$ значение цвета в точке $x,y$
-		\If {$y$ четное}
-		\If {$x$ четное}
+		\State $lapl$ $\gets$ $C - (in_{x-2, y} + in_{x+2, y} + in_{x, y-2} + in_{x, y+2}) / 4$
+		\If {пиксель красный}
 		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $C$
-		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4$
-		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x-1, y-1} + in_{x-1, y+1} + in_{x+1, y-1} + in_{x+1, y+1}) / 4$
-		\Else
-		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2$
-		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
-		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2$
+		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4 + \alpha * lapl$
+		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x-1, y-1} + in_{x-1, y+1} + in_{x+1, y-1} + in_{x+1, y+1}) / 4 + \alpha * lapl$
 		\EndIf
-		\Else
-		\If {$x$ четное}
-		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2$
-		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
-		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2$
-		\Else
-		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x-1, y-1} + in_{x-1, y+1} + in_{x+1, y-1} + in_{x+1, y+1}) / 4$
-		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4$
+		\If {пиксель синий}
+		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x-1, y-1} + in_{x-1, y+1} + in_{x+1, y-1} + in_{x+1, y+1}) / 4 + \gamma * lapl$
+		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4 + \gamma * lapl$
 		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $C$
 		\EndIf
+		\State lapl $\gets$ $C - (in_{x-1, y-1} + in_{x-1, y+1} + in_{x, y-2} + in_{x, y+2}+ in_{x+1, y-1}+ in_{x+1, y+1}+ in_{x-2, y}+ in_{x+2, y}) / 8$
+		\If {пиксель зеленый И соседи красные}
+		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2 + \beta * lapl$
+		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
+		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2 + \beta * lapl$
+		\EndIf
+		\If {пиксель зеленый И соседи синие}
+		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2 + \beta * lapl$
+		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
+		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2 + \beta * lapl$
 		\EndIf
 		\EndFor
 		\EndFor
@@ -97,11 +100,11 @@
 
 \subsection{Диаграма классов}
 
-На рисунке \ref{img:graphics} представлена блок-схема алгоритма синтеза изображения.
+Нужна ? или айдеф? или и то и то?
 
-%\img{190mm}{graphics}{Блок-схема алгоритма синтеза изображения}
+\subsection{Или (и) айдеф}
 
 \section*{Вывод}
 
-В данном разделе были представлены требования к программному обеспечению и разработаны схемы реализуемых алгоритмов.
+В данном разделе были представлены требования к программному обеспечению и описаны реализуемые алгоритмы.
 

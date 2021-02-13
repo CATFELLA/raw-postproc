@@ -43,12 +43,11 @@ std::vector<float> mhc_debayer::debay(const std::vector<float> &in, int width,
       }
 
       float rgb[3];
-
+      float lapl;
       if ((x & 1) == debayerOffset[0] && (y & 1) == debayerOffset[1]) {
         // Center pixel is red
-        float lapl =
-            neigh[2][2] -
-            (neigh[0][2] + neigh[4][2] + neigh[2][0] + neigh[2][4]) / 4;
+        lapl = neigh[2][2] -
+               (neigh[0][2] + neigh[4][2] + neigh[2][0] + neigh[2][4]) / 4;
 
         rgb[0] = in[iy * width + ix];
         rgb[1] = (neigh[2][1] + neigh[1][2] + neigh[2][3] + neigh[3][2]) / 4 +
@@ -57,9 +56,8 @@ std::vector<float> mhc_debayer::debay(const std::vector<float> &in, int width,
                  alpha * lapl;
       } else if ((x & 1) == BlueX && (y & 1) == BlueY) {
         // Center pixel is blue
-        float lapl =
-            neigh[2][2] -
-            (neigh[0][2] + neigh[4][2] + neigh[2][0] + neigh[2][4]) / 4;
+        lapl = neigh[2][2] -
+               (neigh[0][2] + neigh[4][2] + neigh[2][0] + neigh[2][4]) / 4;
 
         rgb[0] = (neigh[1][1] + neigh[3][1] + neigh[1][3] + neigh[3][3]) / 4 +
                  gamma * lapl;
@@ -68,10 +66,10 @@ std::vector<float> mhc_debayer::debay(const std::vector<float> &in, int width,
         rgb[2] = in[iy * width + ix];
       } else {
         // Center pixel is green
-        float lapl = (neigh[2][2] -
-                      (neigh[1][1] + neigh[3][1] + neigh[0][2] + neigh[4][2] +
-                       neigh[1][3] + neigh[3][3] + neigh[2][0] + neigh[2][4]) /
-                          8);
+        lapl = (neigh[2][2] -
+                (neigh[1][1] + neigh[3][1] + neigh[0][2] + neigh[4][2] +
+                 neigh[1][3] + neigh[3][3] + neigh[2][0] + neigh[2][4]) /
+                    8);
         rgb[1] = in[iy * width + ix];
 
         if ((y & 1) == debayerOffset[1]) {

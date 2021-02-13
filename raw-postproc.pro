@@ -22,8 +22,8 @@ SOURCES += \
     src/renderer.cpp \
     src/settings.cpp \
     src/simple_debayer.cpp \
-    src/stb_image.cpp \
-    src/tiny_dng_loader.cpp
+    lib/stb_image.cpp \
+    lib/tiny_dng_loader.cpp
 
 HEADERS += \
     src/base_debayer.h \
@@ -36,8 +36,8 @@ HEADERS += \
     src/renderer.h \
     src/settings.h \
     src/simple_debayer.h \
-    src/stb_image.h \
-    src/tiny_dng_loader.h
+    lib/stb_image.h \
+    lib/tiny_dng_loader.h
 
 FORMS += \
     src/mainwindow.ui
