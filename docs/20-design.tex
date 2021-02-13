@@ -59,7 +59,7 @@
 \subsection{Алгоритм интерполяции Malvar-He-Cutler}
 \begin{algorithm}[H]
 	\caption{Malvar-He-Cutler}
-	\label{alg:mhc}
+	\label{alg:mhc1}
 	\begin{algorithmic}[1]
 		\State $in$ $\gets$ вектор с данными с сенсора камеры
 		\State $height$ $\gets$ высота изображения $DomColor$
@@ -82,19 +82,26 @@
 		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4 + \gamma * lapl$
 		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $C$
 		\EndIf
-		\State lapl $\gets$ $C - (in_{x-1, y-1} + in_{x-1, y+1} + in_{x, y-2} + in_{x, y+2}+ in_{x+1, y-1}+ in_{x+1, y+1}+ in_{x-2, y}+ in_{x+2, y}) / 8$
-		\If {пиксель зеленый И соседи красные}
-		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2 + \beta * lapl$
-		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
-		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2 + \beta * lapl$
-		\EndIf
-		\If {пиксель зеленый И соседи синие}
-		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2 + \beta * lapl$
-		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
-		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2 + \beta * lapl$
-		\EndIf
-		\EndFor
-		\EndFor
+		\State $lapl$ $\gets$ $C - (in_{x-1, y-1} + in_{x-1, y+1} + in_{x, y-2} + in_{x, y+2}+ in_{x+1, y-1}+ in_{x+1, y+1}+ in_{x-2, y}+ in_{x+2, y}) / 8$
+		\algstore{myalg}
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+	\begin{algorithmic}[1]
+	\algrestore{myalg}
+	\If {пиксель зеленый И соседи красные}
+	\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2 + \beta * lapl$
+	\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
+	\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2 + \beta * lapl$
+	\EndIf
+	\If {пиксель зеленый И соседи синие}
+	\State $out_{3 * (y * width + x) + 0}$ $\gets$ $(in_{x, y - 1} + in_{x, y+1}) / 2 + \beta * lapl$
+	\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
+	\State $out_{3 * (y * width + x) + 2}$ $\gets$ $(in_{x-1, y} + in_{x+1, y}) / 2 + \beta * lapl$
+	\EndIf
+	\EndFor
+	\EndFor
 	\end{algorithmic}
 \end{algorithm}
 
