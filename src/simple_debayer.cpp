@@ -35,6 +35,7 @@ std::vector<float> simple_debayer::debay(const std::vector<float> &in,
       float rgb[3];
       if ((iy & 1) == 0) {
         if ((ix & 1) == 0) {
+          // Center pixel is red
           rgb[0] = C;
           rgb[1] = (fetch(in, x, y - 1, width, height) +
                     fetch(in, x, y + 1, width, height) +
@@ -47,6 +48,8 @@ std::vector<float> simple_debayer::debay(const std::vector<float> &in,
                     fetch(in, x + 1, y + 1, width, height)) /
                    4;
         } else {
+          // Center pixel is green
+          // Left and right neighbors are red
           rgb[0] = (fetch(in, x - 1, y, width, height) +
                     fetch(in, x + 1, y, width, height)) /
                    2;
@@ -57,6 +60,8 @@ std::vector<float> simple_debayer::debay(const std::vector<float> &in,
         }
       } else {
         if ((ix & 1) == 0) {
+          // Center pixel is green
+          // Left and right neighbors are blue
           rgb[0] = (fetch(in, x, y - 1, width, height) +
                     fetch(in, x, y + 1, width, height)) /
                    2;
@@ -65,6 +70,7 @@ std::vector<float> simple_debayer::debay(const std::vector<float> &in,
                     fetch(in, x + 1, y, width, height)) /
                    2;
         } else {
+          // Center pixel is blue
           rgb[0] = (fetch(in, x - 1, y - 1, width, height) +
                     fetch(in, x - 1, y + 1, width, height) +
                     fetch(in, x + 1, y - 1, width, height) +

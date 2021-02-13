@@ -143,37 +143,25 @@ static inline void inverse_matrix33(double dst[3][3], double m[3][3]) {
 }
 
 // sRGB = XYZD50_to_sRGB * ForwardMatrix(wbCCT) * rawWB * CameraRaw
-static const double xyzD50_to_sRGB[3][3] = {{3.1338561, -1.6168667, -0.4906146},
-                                            {-0.9787684, 1.9161415, 0.0334540},
-                                            {0.0719453, -0.2289914, 1.4052427}};
 
 static const double xyzD50_to_ProPhoto[3][3] = {
     {1.3460, -0.2556, -0.0511}, {-0.5446, 1.5082, 0.0205}, {0.0, 0.0, 1.2123}};
-
-static const double xyzD50_to_adobeRGB[3][3] = {
-    {1.9624274, -0.6105343, -0.3413404},
-    {-0.9787684, 1.9161415, 0.0334540},
-    {0.0286869, -0.1406752, 1.3487655}};
-
-static const double xyzD50_to_widegammut[3][3] = {
-    {1.4628067, -0.1840623, -0.2743606},
-    {-0.5217933, 1.4472381, 0.0677227},
-    {0.0349342, -0.0968930, 1.2884099}};
 
 void compute_color_matrix(double dst[3][3], const tinydng::DNGImage &image,
                           const double wb[3]) {
   double xyz_to_camera1[3][3];
   double xyz_to_camera2[3][3];
 
-  const double AB[3][3] = {{wb[0], 0, 0}, {0, wb[1], 0}, {0, 0, wb[2]}};
+  const double AB[3][3] = {
+      {wb[0], 0, 0},
+      {0, wb[1] + 0.2, 0}, // 0.2 - magic number, fixes green tint (cringe....)
+      {0, 0, wb[2]}};
 
   matrix_mult33(xyz_to_camera1, AB, image.camera_calibration1);
   matrix_mult33(xyz_to_camera2, xyz_to_camera1, image.color_matrix1);
 
   double camera_to_xyz[3][3];
   inverse_matrix33(camera_to_xyz, xyz_to_camera2);
-
-  double camera_to_xyz_D50[3][3];
 
   matrix_mult33(dst, xyzD50_to_ProPhoto, camera_to_xyz);
 }
