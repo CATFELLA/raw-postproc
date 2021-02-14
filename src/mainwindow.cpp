@@ -16,7 +16,7 @@ MainWindow::~MainWindow() { delete ui; }
 void MainWindow::on_develop_button_clicked() {
   if (opened) {
     if (!render_thread) {
-      std::unique_ptr<base_debayer> deb = std::make_unique<mhc_debayer>();
+      std::unique_ptr<base_debayer> deb = std::make_unique<simple_debayer>();
       render_thread = std::make_unique<renderer>(deb, seq, set);
 
       qRegisterMetaType<std::shared_ptr<std::vector<float>>>();
