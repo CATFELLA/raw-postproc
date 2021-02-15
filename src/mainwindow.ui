@@ -37,7 +37,7 @@
      <string>Develop</string>
     </property>
    </widget>
-   <widget class="QSlider" name="intensity_slider">
+   <widget class="QSlider" name="contrast_slider">
     <property name="geometry">
      <rect>
       <x>1720</x>
@@ -47,13 +47,13 @@
      </rect>
     </property>
     <property name="minimum">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="maximum">
-     <number>100</number>
+     <number>300</number>
     </property>
     <property name="value">
-     <number>50</number>
+     <number>100</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -187,13 +187,10 @@
      </rect>
     </property>
     <property name="minimum">
-     <number>-100</number>
+     <number>-200</number>
     </property>
     <property name="maximum">
-     <number>100</number>
-    </property>
-    <property name="value">
-     <number>0</number>
+     <number>200</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>

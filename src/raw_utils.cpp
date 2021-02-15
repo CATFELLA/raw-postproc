@@ -225,3 +225,23 @@ void brightness(std::vector<float> &in, int width, int height,
     }
   }
 }
+
+void contrast(std::vector<float> &in, int width, int height,
+              const double contrast) {
+  if (std::fabs(1 - contrast) > __DBL_EPSILON__) {
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        in[3 * (y * width + x) + 0] =
+            fclamp((in[3 * (y * width + x) + 0] - 0.5) * contrast + 0.5, 0, 1);
+        in[3 * (y * width + x) + 1] =
+            fclamp((in[3 * (y * width + x) + 1] - 0.5) * contrast + 0.5, 0, 1);
+        in[3 * (y * width + x) + 2] =
+            fclamp((in[3 * (y * width + x) + 2] - 0.5) * contrast + 0.5, 0, 1);
+        // slow... (change fclamp to a modifying func
+      }
+    }
+  }
+}

@@ -79,5 +79,8 @@ std::vector<float> DNG_raw::develop(const base_debayer &debayer,
   brightness(debayed, images[frame_count].width, images[frame_count].height,
              settings.brightness);
 
+  contrast(debayed, images[frame_count].width, images[frame_count].height,
+           settings.contrast);
+
   return debayed;
 }

@@ -16,7 +16,7 @@ MainWindow::~MainWindow() { delete ui; }
 void MainWindow::on_develop_button_clicked() {
   if (opened) {
     if (!render_thread) {
-      std::unique_ptr<base_debayer> deb = std::make_unique<simple_debayer>();
+      std::unique_ptr<base_debayer> deb = std::make_unique<mhc_debayer>();
       render_thread = std::make_unique<renderer>(deb, seq, set);
 
       qRegisterMetaType<std::shared_ptr<std::vector<float>>>();
@@ -76,11 +76,6 @@ void MainWindow::handle_frame(std::shared_ptr<std::vector<float>> frame) {
 
 void MainWindow::on_save_button_clicked() {}
 
-void MainWindow::on_intensity_slider_valueChanged(int value) {
-  set->intensity = value / 100. * 2;
-  emit ui->develop_button->clicked();
-}
-
 void MainWindow::on_tint_slider_sliderReleased() {
   set->raw_white_balance[1] = ui->tint_slider->value() / 100.;
   emit ui->develop_button->clicked();
@@ -109,6 +104,13 @@ void MainWindow::on_actionOpen_DNG_triggered() {
 void MainWindow::on_actionExit_triggered() { QApplication::quit(); }
 
 void MainWindow::on_brightness_slider_sliderReleased() {
-  // CHTO
+  set->brightness = ui->brightness_slider->value() / 100.;
+
+  emit ui->develop_button->clicked();
+}
+
+void MainWindow::on_contrast_slider_sliderReleased() {
+  set->contrast = ui->contrast_slider->value() / 100.;
+
   emit ui->develop_button->clicked();
 }

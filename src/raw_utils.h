@@ -25,4 +25,7 @@ void color_correction(std::vector<float> &in, int width, int height,
 void brightness(std::vector<float> &in, int width, int height,
                 const double intesity);
 
+void contrast(std::vector<float> &in, int width, int height,
+              const double contrast);
+
 #endif // RAW_UTILS_H

@@ -37,8 +37,6 @@ public:
 private slots:
   void handle_frame(std::shared_ptr<std::vector<float>> frame);
 
-  void on_intensity_slider_valueChanged(int value);
-
   void on_develop_button_clicked();
 
   void on_save_button_clicked();
@@ -50,6 +48,8 @@ private slots:
   void on_actionExit_triggered();
 
   void on_brightness_slider_sliderReleased();
+
+  void on_contrast_slider_sliderReleased();
 
 private:
   Ui::MainWindow *ui;
