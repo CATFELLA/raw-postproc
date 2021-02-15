@@ -19,7 +19,7 @@ public:
 
     this->saturation = 0.0;
     this->brightness = 0.0;
-    this->contrast = 0.0;
+    this->contrast = 1.0;
   }
 };
 

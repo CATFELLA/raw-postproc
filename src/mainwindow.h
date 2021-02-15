@@ -51,6 +51,10 @@ private slots:
 
   void on_contrast_slider_sliderReleased();
 
+  void on_R_slider_sliderReleased();
+
+  void on_B_slider_sliderReleased();
+
 private:
   Ui::MainWindow *ui;
   QGraphicsScene *scene;

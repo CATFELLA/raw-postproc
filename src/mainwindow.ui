@@ -47,7 +47,7 @@
      </rect>
     </property>
     <property name="minimum">
-     <number>0</number>
+     <number>1</number>
     </property>
     <property name="maximum">
      <number>300</number>
@@ -73,19 +73,6 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="save_button">
-    <property name="geometry">
-     <rect>
-      <x>1760</x>
-      <y>400</y>
-      <width>80</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Save</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -117,12 +104,15 @@
      <number>0</number>
     </property>
     <property name="maximum">
-     <number>200</number>
+     <number>400</number>
     </property>
     <property name="singleStep">
      <number>1</number>
     </property>
     <property name="value">
+     <number>100</number>
+    </property>
+    <property name="sliderPosition">
      <number>100</number>
     </property>
     <property name="orientation">
@@ -194,6 +184,79 @@
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QSlider" name="R_slider">
+    <property name="geometry">
+     <rect>
+      <x>1720</x>
+      <y>190</y>
+      <width>160</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>199</number>
+    </property>
+    <property name="singleStep">
+     <number>1</number>
+    </property>
+    <property name="value">
+     <number>100</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="invertedAppearance">
+     <bool>false</bool>
+    </property>
+    <property name="invertedControls">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>1870</x>
+      <y>200</y>
+      <width>57</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>R</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>1740</x>
+      <y>170</y>
+      <width>121</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Color temperature</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>1720</x>
+      <y>200</y>
+      <width>57</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>B</string>
     </property>
    </widget>
   </widget>

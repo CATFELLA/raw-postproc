@@ -70,16 +70,13 @@ void MainWindow::handle_frame(std::shared_ptr<std::vector<float>> frame) {
     }
   }
 
-  scene->addPixmap(QPixmap::fromImage(qimage));
+  scene->addPixmap(QPixmap::fromImage(qimage).scaled(
+      ui->graphicsView->width() - 2, ui->graphicsView->height() - 2,
+      Qt::KeepAspectRatio));
   ui->graphicsView->setScene(scene);
 }
 
 void MainWindow::on_save_button_clicked() {}
-
-void MainWindow::on_tint_slider_sliderReleased() {
-  set->raw_white_balance[1] = ui->tint_slider->value() / 100.;
-  emit ui->develop_button->clicked();
-}
 
 void MainWindow::on_actionOpen_DNG_triggered() {
   seq.reset(new DNG_raw);
@@ -112,5 +109,23 @@ void MainWindow::on_brightness_slider_sliderReleased() {
 void MainWindow::on_contrast_slider_sliderReleased() {
   set->contrast = ui->contrast_slider->value() / 100.;
 
+  emit ui->develop_button->clicked();
+}
+
+void MainWindow::on_tint_slider_sliderReleased() {
+  set->raw_white_balance[1] = ui->tint_slider->value() / 100.;
+  emit ui->develop_button->clicked();
+}
+
+void MainWindow::on_R_slider_sliderReleased() {
+  set->raw_white_balance[0] =
+      (ui->R_slider->maximum() - ui->R_slider->value()) / 100.;
+  set->raw_white_balance[2] = ui->R_slider->value() / 100.;
+  emit ui->develop_button->clicked();
+}
+
+void MainWindow::on_B_slider_sliderReleased() {
+  set->raw_white_balance[2] =
+      (ui->B_slider->maximum() - ui->B_slider->value()) / 100.;
   emit ui->develop_button->clicked();
 }
