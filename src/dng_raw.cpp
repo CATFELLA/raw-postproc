@@ -25,11 +25,7 @@ bool DNG_raw::load_images(std::string file_name) {
   return ret;
 }
 
-void DNG_raw::next_frame() {
-  std::cout << "new frame is " << (frame_count + 1) % images.size()
-            << std::endl;
-  frame_count = (frame_count + 1) % images.size();
-}
+void DNG_raw::next_frame() { frame_count = (frame_count + 1) % images.size(); }
 void DNG_raw::prev_frame() {
   frame_count =
       (frame_count - 1 > images.size()) ? images.size() - 1 : frame_count - 1;
@@ -39,14 +35,6 @@ size_t DNG_raw::get_width() { return images[frame_count].width; }
 size_t DNG_raw::get_height() { return images[frame_count].height; }
 
 int DNG_raw::get_white_level() { return images[frame_count].white_level[0]; }
-
-static uint16_t cclamp(uint16_t x, uint16_t minx, uint16_t maxx) {
-  if (x < minx)
-    return minx;
-  if (x > maxx)
-    return maxx;
-  return x;
-}
 
 std::vector<float> DNG_raw::develop(const base_debayer &debayer,
                                     const class settings &settings) {
@@ -58,16 +46,9 @@ std::vector<float> DNG_raw::develop(const base_debayer &debayer,
                        images[frame_count].black_level[0],
                        images[frame_count].white_level[0]);
 
-  std::cout << "precol" << pre_color_corrected[0] << std::endl;
-
-  std::cout << "fm111 " << images[frame_count].forward_matrix1 << std::endl;
-  std::cout << "fm211 " << images[frame_count].forward_matrix2 << std::endl;
-
   std::vector<float> debayed =
       debayer.debay(pre_color_corrected, images[frame_count].width,
                     images[frame_count].height, settings.cfa_offset);
-
-  std::cout << "debay" << debayed[0] << std::endl;
 
   double srgb_color_matrix[3][3];
   compute_color_matrix(srgb_color_matrix, images[frame_count],

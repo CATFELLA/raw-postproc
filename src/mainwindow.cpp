@@ -7,7 +7,12 @@ MainWindow::MainWindow(QWidget *parent)
 
   scene = new QGraphicsScene(this);
 
-  set.reset(new settings);
+  qRegisterMetaType<std::shared_ptr<std::vector<float>>>();
+
+  deb = std::make_shared<colored_bayer>();
+  seq = std::make_shared<DNG_raw>();
+
+  set = std::make_shared<settings>();
   set->brightness = 0.1;
 }
 
@@ -16,18 +21,18 @@ MainWindow::~MainWindow() { delete ui; }
 void MainWindow::on_develop_button_clicked() {
   if (opened) {
     if (!render_thread) {
-      std::unique_ptr<base_debayer> deb = std::make_unique<mhc_debayer>();
       render_thread = std::make_unique<renderer>(deb, seq, set);
-
-      qRegisterMetaType<std::shared_ptr<std::vector<float>>>();
 
       connect(render_thread.get(), &renderer::frame_ready, this,
               &MainWindow::handle_frame);
     }
 
     render_thread->start();
+    ui->status->setText("Start rendering");
   }
 }
+
+int i = 0;
 
 void MainWindow::handle_frame(std::shared_ptr<std::vector<float>> frame) {
   int f_width = static_cast<int>(seq->get_width());
@@ -54,32 +59,22 @@ void MainWindow::handle_frame(std::shared_ptr<std::vector<float>> frame) {
       bits[y * f_width + x].red = (*frame)[3 * (y * f_width + x) + 0] * 65365;
       bits[y * f_width + x].green = (*frame)[3 * (y * f_width + x) + 1] * 65365;
       bits[y * f_width + x].blue = (*frame)[3 * (y * f_width + x) + 2] * 65365;
-
-#define MX 1300
-#define YX 300
-      if ((x == MX || x == MX + 1 || x == MX + 2) && y == YX) {
-        std::cout << x << " <-x y-> " << y
-                  << " valR =" << qimage.pixelColor(x, y).red()
-                  << " valG =" << qimage.pixelColor(x, y).green()
-                  << " valB =" << qimage.pixelColor(x, y).blue() << std::endl;
-
-        QRgba64 nval;
-        nval.setRed(65365);
-        qimage.setPixelColor(x, y, nval);
-      }
     }
   }
 
   scene->addPixmap(QPixmap::fromImage(qimage).scaled(
       ui->graphicsView->width() - 2, ui->graphicsView->height() - 2,
       Qt::KeepAspectRatio));
+  qimage.save("frame" + QString::number(i) + ".png");
+  i++;
   ui->graphicsView->setScene(scene);
+  ui->status->setText("Frame handled");
 }
 
 void MainWindow::on_save_button_clicked() {}
 
 void MainWindow::on_actionOpen_DNG_triggered() {
-  seq.reset(new DNG_raw);
+  opened = false;
 
   QString qfile_name = QFileDialog::getOpenFileName(
       this, tr("Open DNG"), "./", tr("Digital Negatives (*.dng)"));
@@ -89,11 +84,13 @@ void MainWindow::on_actionOpen_DNG_triggered() {
   } catch (std::runtime_error &e) {
     std::cerr << "An exception occurred. Reason: " << e.what() << std::endl;
     QMessageBox::critical(this, "Ошибка!", e.what());
+    ui->status->setText("Error while loading the file");
 
     return;
   }
 
   opened = true;
+  ui->status->setText("File loaded");
 
   emit ui->develop_button->clicked();
 }
@@ -124,8 +121,35 @@ void MainWindow::on_R_slider_sliderReleased() {
   emit ui->develop_button->clicked();
 }
 
-void MainWindow::on_B_slider_sliderReleased() {
-  set->raw_white_balance[2] =
-      (ui->B_slider->maximum() - ui->B_slider->value()) / 100.;
+void MainWindow::on_comboBox_currentTextChanged(const QString &arg1) {
+  deb = nullptr; // ok why... doesn't work without it
+
+  if (arg1 == "colored_bayer") {
+    deb = std::make_shared<colored_bayer>();
+  }
+  if (arg1 == "bilinear") {
+    deb = std::make_shared<simple_debayer>();
+  }
+  if (arg1 == "mhc") {
+    deb = std::make_shared<mhc_debayer>();
+  }
+  if (arg1 == "sh") {
+    deb = std::make_shared<sh_debayer>();
+  }
+  if (arg1 == "sh_mhc") {
+    deb = std::make_shared<sh_mhc_debayer>();
+  }
+
+  /*#define TESTS 100
+    uint64_t start = tick();
+    for (int i = 0; i < TESTS; i++) {
+      seq->develop(*deb, *set);
+    }
+    uint64_t time = (tick() - start) / TESTS;
+
+    std::cout << arg1.toStdString() << " timed = " << time << std::endl;
+
+    ui->status->setText("Tests finished");
+  */
   emit ui->develop_button->clicked();
 }

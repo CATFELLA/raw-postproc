@@ -1,19 +1,23 @@
 #include "renderer.h"
 
-renderer::renderer(std::unique_ptr<base_debayer> &debayer,
+renderer::renderer(const std::shared_ptr<base_debayer> &debayer,
                    const std::shared_ptr<base_format> &file,
                    const std::shared_ptr<settings> &set) {
-  _debayer.reset(debayer.release());
+  _debayer.reset(debayer.get());
   _file.reset(file.get());
   _set.reset(set.get());
 }
 
-void renderer::set_debayer(std::unique_ptr<base_debayer> &debayer) {
-  { _debayer.reset(debayer.release()); }
+void renderer::set_debayer(const std::shared_ptr<base_debayer> &debayer) {
+  { _debayer = debayer; }
 }
 
 void renderer::set_file(const std::shared_ptr<base_format> &file) {
-  _file.reset(file.get());
+  _file = file;
+}
+
+void renderer::set_settings(const std::shared_ptr<settings> &set) {
+  _set = set;
 }
 
 void renderer::run() {

@@ -23,7 +23,7 @@ std::vector<float> mhc_debayer::debay(const std::vector<float> &in, int width,
   const int BlueX = 1 - debayerOffset[0];
   const int BlueY = 1 - debayerOffset[1];
 
-  const float alpha = 1 / 2, beta = 5 / 8, gamma = 3 / 4;
+  const float alpha = 0.5f, beta = 0.625f, gamma = 0.75f;
 
 #ifdef _OPENMP
 #pragma omp parallel for

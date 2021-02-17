@@ -19,7 +19,10 @@
 #include "mhc_debayer.h"
 #include "renderer.h"
 #include "settings.h"
+#include "sh_debayer.h"
+#include "sh_mhc_debayer.h"
 #include "simple_debayer.h"
+#include "timer.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -53,7 +56,7 @@ private slots:
 
   void on_R_slider_sliderReleased();
 
-  void on_B_slider_sliderReleased();
+  void on_comboBox_currentTextChanged(const QString &arg1);
 
 private:
   Ui::MainWindow *ui;
@@ -61,6 +64,7 @@ private:
 
   std::shared_ptr<settings> set;
   std::shared_ptr<DNG_raw> seq;
+  std::shared_ptr<base_debayer> deb;
 
   std::unique_ptr<renderer> render_thread;
 

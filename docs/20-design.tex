@@ -105,9 +105,89 @@
 	\end{algorithmic}
 \end{algorithm}
 \clearpage
+
+\subsection{Smooth Hue Transition + Malvar-He-Cutler}
+\begin{algorithm}[H]
+	\caption{Smooth Hue Transition + Malvar-He-Cutler}
+	\label{alg:mhc1}
+	\begin{algorithmic}[1]
+		\State $in$ $\gets$ вектор с данными с сенсора камеры
+		\State $height$ $\gets$ высота изображения $DomColor$
+		\State $width$ $\gets$ ширина изображения
+		\State $out$ $\gets$ вектор с интерполированными цветами
+		\State $\alpha$ $\gets$ $\frac{1}{2}$
+		\State $\gamma$ $\gets$ $\frac{3}{4}$
+		\For{$y \gets 0$ to $height$}
+		\For{$x \gets 0$ to $width$}
+		\State $C$ $\gets$ значение цвета в точке $x,y$
+		\State $lapl$ $\gets$ $C - (in_{x-2, y} + in_{x+2, y} + in_{x, y-2} + in_{x, y+2}) / 4$
+		\If {пиксель красный}
+		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $C$
+		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4 + \alpha * lapl$
+		\EndIf
+		\If {пиксель синий}
+		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $(in_{x, y-1} + in_{x, y + 1} + in_{x - 1, y} + in_{x + 1, y}) / 4 + \gamma * lapl$
+		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $C$
+		\EndIf
+		\If {пиксель зеленый}
+		\State $out_{3 * (y * width + x) + 1}$ $\gets$ $C$
+		\EndIf
+		\EndFor
+		\EndFor
+		\algstore{myalg}
+	\end{algorithmic}
+\end{algorithm}
+\clearpage
+\begin{algorithm}
+	\begin{algorithmic}[1]
+		\algrestore{myalg}
+		\For{$y \gets 0$ to $height$}
+		\For{$x \gets 0$ to $width$}
+		\If {пиксель красный}
+		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $G(x,y)/4 + (
+		B(x-1,y-1)/G(x-1,y-1) +
+		B(x-1,y+1)/G(x-1,y+1) +
+		B(x+1,y-1)/G(x+1,y-1) +
+		B(x+1,y+1)/G(x+1,y+1)
+		)$
+		\EndIf
+		\If {пиксель синий}
+		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $G(x,y)/4 + (
+		R(x-1,y-1)/G(x-1,y-1) +
+		R(x-1,y+1)/G(x-1,y+1) +
+		R(x+1,y-1)/G(x+1,y-1) +
+		R(x+1,y+1)/G(x+1,y+1)
+		)$
+		\EndIf
+		\If {пиксель зеленый И соседи красные}
+		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $G(x,y)/2 + (
+		R(x-1,y)/G(x-1,y) +
+		R(x+1,y)/G(x+1,y)
+		)$
+		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $G(x,y)/2 + (
+		B(x,y-1)/G(x,y-1) +
+		B(x,y+1)/G(x,y+1)
+		)$
+		\EndIf
+		\If {пиксель зеленый И соседи синие}
+		\State $out_{3 * (y * width + x) + 0}$ $\gets$ $G(x,y)/2 + (
+		R(x,y-1)/G(x,y-1) +
+		R(x,y+1)/G(x,y+1)
+		)$
+		\State $out_{3 * (y * width + x) + 2}$ $\gets$ $G(x,y)/2 + (
+		B(x-1,y)/G(x-1,y) +
+		B(x+1,y)/G(x+1,y)
+		)$
+		\EndIf
+		\EndFor
+		\EndFor
+	\end{algorithmic}
+\end{algorithm}
+\clearpage
+
 \subsection{Диаграма классов}
 
-\img{150mm}{uml}{Диаграма классов.} 
+\img{165mm}{uml}{Диаграма классов.} 
 \clearpage
 \subsection{IDEF0}
 \img{100mm}{02_A0}{Схема декомпозиции задачи обработки кадра.} 

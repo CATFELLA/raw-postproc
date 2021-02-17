@@ -21,9 +21,12 @@ SOURCES += \
     src/raw_utils.cpp \
     src/renderer.cpp \
     src/settings.cpp \
+    src/sh_debayer.cpp \
+    src/sh_mhc_debayer.cpp \
     src/simple_debayer.cpp \
     lib/stb_image.cpp \
-    lib/tiny_dng_loader.cpp
+    lib/tiny_dng_loader.cpp \
+    src/timer.cpp
 
 HEADERS += \
     src/base_debayer.h \
@@ -35,9 +38,12 @@ HEADERS += \
     src/raw_utils.h \
     src/renderer.h \
     src/settings.h \
+    src/sh_debayer.h \
+    src/sh_mhc_debayer.h \
     src/simple_debayer.h \
     lib/stb_image.h \
-    lib/tiny_dng_loader.h
+    lib/tiny_dng_loader.h \
+    src/timer.hpp
 
 FORMS += \
     src/mainwindow.ui
