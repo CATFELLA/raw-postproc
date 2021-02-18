@@ -20,7 +20,6 @@ SOURCES += \
     src/mhc_debayer.cpp \
     src/raw_utils.cpp \
     src/renderer.cpp \
-    src/settings.cpp \
     src/sh_debayer.cpp \
     src/sh_mhc_debayer.cpp \
     src/simple_debayer.cpp \
