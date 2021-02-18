@@ -16,10 +16,24 @@
 
 \section{Реализация алгоритмов}
 
-В листинге \ref{lst:bilinear} представлен объект реализующий алгоритм билинейной интерполяции. В листинге \ref{lst:mhc} представлен объект реализующий алгоритм интерполяции Malvar-He-Cutler.
+В листинге \ref{lst:mhc} представлен объект реализующий алгоритм Malvar-He-Cutler. В листинге \ref{lst:shmhc} представлен объект реализующий алгоритм интерполяции Smooth hue transition + Malvar-He-Cutler.
 
-(ну да давай)
-(а тести)
+\begin{lstinputlisting}[
+	caption={Malvar-He-Cutler.},
+	label={lst:mhc},
+	style={customc},
+	]{../src/mhc_debayer.cpp}
+\end{lstinputlisting}
+
+\begin{lstinputlisting}[
+	caption={Smooth hue transition + Malvar-He-Cutler.},
+	label={lst:shmhc},
+	style={customc},
+	]{../src/sh_mhc_debayer.cpp}
+\end{lstinputlisting}
+
 
 \section*{Вывод}
+
+В данном разделе были рассмотрены средства, с помощью которых было реализовано ПО, а также представлены листинги кода с реализацией описанных алгоритмов.
 

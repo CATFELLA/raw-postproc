@@ -21,7 +21,7 @@
 #include "settings.h"
 #include "sh_debayer.h"
 #include "sh_mhc_debayer.h"
-#include "simple_debayer.h"
+#include "bilinear_debayer.h"
 #include "timer.hpp"
 
 QT_BEGIN_NAMESPACE

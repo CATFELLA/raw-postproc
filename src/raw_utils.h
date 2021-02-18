@@ -8,6 +8,10 @@
 
 #include "../lib/tiny_dng_loader.h"
 
+inline int clamp(int x, int minx, int maxx);
+
+inline float fetch(const std::vector<float> &in, int x, int y, int w, int h);
+
 std::vector<uint16_t> unpack(const tinydng::DNGImage &raw);
 
 float fclamp(float x, float minx, float maxx);

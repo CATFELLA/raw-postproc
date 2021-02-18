@@ -1,24 +1,8 @@
 #include "sh_mhc_debayer.h"
 
-static inline int clamp(int x, int minx, int maxx) {
-  if (x < minx)
-    return minx;
-  if (x > maxx)
-    return maxx;
-  return x;
-}
-
-static inline float fetch(const std::vector<float> &in, int x, int y, int w,
-                          int h) {
-  int xx = clamp(x, 0, w - 1);
-  int yy = clamp(y, 0, h - 1);
-  return in[yy * w + xx];
-}
-
 std::vector<float> sh_mhc_debayer::debay(const std::vector<float> &in,
                                          int width, int height,
                                          const int debayerOffset[2]) const {
-  std::cout << "yay imh shmhc" << std::endl;
   std::vector<float> out(width * height * 3);
 
   const int BlueX = 1 - debayerOffset[0];

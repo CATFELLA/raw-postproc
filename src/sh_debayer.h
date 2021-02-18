@@ -2,6 +2,7 @@
 #define SH_DEBAYER_H
 
 #include "base_debayer.h"
+#include "raw_utils.h"
 
 class sh_debayer : public base_debayer {
 public:

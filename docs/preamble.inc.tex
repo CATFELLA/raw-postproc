@@ -5,6 +5,22 @@
 %\usepackage{pscyr} % Нормальные шрифты
 \usepackage{enumitem}
 
+\RequirePackage{listings}
+
+\lstdefinestyle{customc}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	frame=L,
+	xleftmargin=\parindent,
+	language=C,
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{blue},
+	stringstyle=\color{orange},
+}
+
 \usepackage{caption}
 \captionsetup{labelsep=endash}
 \captionsetup[figure]{name={Рисунок}}

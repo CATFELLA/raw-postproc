@@ -86,11 +86,55 @@
 
 Основной задачей алгоритмов демозаики является уменьшения воздействия фильтра Байера.
 
-На изображениях ref показано восстановление жесткого края.
+\img{100mm}{bil_close}{Билинейная интерполяция.}
+\img{100mm}{mhc_close}{Malvar-He-Cutle.}
+\img{100mm}{sh_close}{Smooth hue transition.}
+\img{100mm}{shmhc_close}{Smooth hue transition + Malvar-He-Cutler.}
+\clearpage
+На изображениях \ref{img:bil_close}, \ref{img:mhc_close}, \ref{img:sh_close} и \ref{img:shmhc_close} показано восстановление жесткого края.
+\clearpage
 
-На изображениях ref показана резкость каждого алгоритма, самым резким является алгоритм Malvar-He-Cutler, затем Smooth Hue Transition + Malvar-He-Cutler, Smooth Hue Transition и самым нерезким является билинейная интерполяция.
+\img{100mm}{bil_cl}{Билинейная интерполяция.}
+\img{100mm}{mhc_cl}{Malvar-He-Cutle.}
+\img{100mm}{sh_cl}{Smooth hue transition.}
+\img{100mm}{shmhc_cl}{Smooth hue transition + Malvar-He-Cutler.}
+\clearpage
 
-На изображении ref алгоритм Malvar-He-Cutler восстановил край без зеленых артефактов. Остальные алгоритмы интерполировали край с зелеными или, в случае билинейной интерполяции, цветными артефактами. Однако артефакты алгоритма Smooth Hue Transition + Malvar-He-Cutler на изображении ref немного слабее чем у алгоритма Smooth Hue Transition на изображении ref.
+На изображениях показана резкость каждого алгоритма, самым резким является алгоритм Malvar-He-Cutler (\ref{img:mhc_cl}), затем Smooth Hue Transition + Malvar-He-Cutler (\ref{img:shmhc_cl}), Smooth Hue Transition (\ref{img:sh_cl}) и самым нерезким является билинейная интерполяция, изображение \ref{img:bil_cl}.
+
+Так как разрешение зеленого канала в два раза больше разрешений красного и синего каналов, более точное восстановление зеленого канала ведет к большей резкости изображения.
+
+\clearpage
+\img{100mm}{bil_green}{Билинейная интерполяция.}
+\img{100mm}{mhc_green}{Malvar-He-Cutle.}
+\img{100mm}{sh_green}{Smooth hue transition.}
+\img{100mm}{shmhc_green}{Smooth hue transition + Malvar-He-Cutler.}
+\clearpage
+
+На изображении \ref{img:mhc_green} алгоритм Malvar-He-Cutler восстановил край без зеленых артефактов. Остальные алгоритмы интерполировали край с зелеными или, в случае билинейной интерполяции, цветными артефактами. Однако артефакты алгоритма Smooth Hue Transition + Malvar-He-Cutler на изображении \ref{img:shmhc_green} немного слабее чем у алгоритма Smooth Hue Transition на изображении \ref{img:sh_green}.
 
 \section*{Вывод}
+
+В данном разделе были рассмотрены примеры работы программного обеспечения и были сравнены результаты работы разных алгоритмов. В результате сравнения были получены следующие результаты:
+\begin{itemize}
+	\item все алгоритмы корректно воспроизводят цвет;
+	\item алгоритмы сопоставлены в таблице \ref{tbl:algs}
+\end{itemize}
+
+\begin{table}[h]
+	\begin{center}
+		\caption{Сравнение алгоритмов.}
+		\label{tbl:algs}
+		\resizebox{16cm}{!}{
+			\begin{tabular}{|c|c|c|c|c|}
+				\hline
+				\bfseries Параметр & \bfseries Билинейная интерполяция & \bfseries Malvar-He-Cutler & \bfseries Smooth Hue Transition  & \bfseries Smooth Hue Transition + Malvar-He-Cutler \\
+				\hline
+				Скорость (малое разрешение) & 1 & 4 & 3 & 2 \\ \hline
+				Скорость (большое разрешение) & 1 & 3 & 2 & 4 \\ \hline
+				Подавление артефактов & 4 & 1 & 3 & 2 \\ \hline
+				Резкость & 4 & 1 & 3 & 2 \\ \hline
+		\end{tabular}}
+	\end{center}
+\end{table}
 

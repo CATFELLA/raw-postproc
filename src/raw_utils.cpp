@@ -1,5 +1,19 @@
 #include "raw_utils.h"
 
+inline int clamp(int x, int minx, int maxx) {
+  if (x < minx)
+    return minx;
+  if (x > maxx)
+    return maxx;
+  return x;
+}
+
+float fetch(const std::vector<float> &in, int x, int y, int w, int h) {
+  int xx = clamp(x, 0, w - 1);
+  int yy = clamp(y, 0, h - 1);
+  return in[yy * w + xx];
+}
+
 //
 // Decode 14bit integer image into floating point HDR image
 //

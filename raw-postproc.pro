@@ -13,6 +13,7 @@ QMAKE_LFLAGS +=  -fopenmp
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/bilinear_debayer.cpp \
     src/colored_bayer.cpp \
     src/dng_raw.cpp \
     src/main.cpp \
@@ -22,7 +23,6 @@ SOURCES += \
     src/renderer.cpp \
     src/sh_debayer.cpp \
     src/sh_mhc_debayer.cpp \
-    src/simple_debayer.cpp \
     lib/stb_image.cpp \
     lib/tiny_dng_loader.cpp \
     src/timer.cpp
@@ -30,6 +30,7 @@ SOURCES += \
 HEADERS += \
     src/base_debayer.h \
     src/base_format.h \
+    src/bilinear_debayer.h \
     src/colored_bayer.h \
     src/dng_raw.h \
     src/mainwindow.h \
@@ -39,7 +40,6 @@ HEADERS += \
     src/settings.h \
     src/sh_debayer.h \
     src/sh_mhc_debayer.h \
-    src/simple_debayer.h \
     lib/stb_image.h \
     lib/tiny_dng_loader.h \
     src/timer.hpp

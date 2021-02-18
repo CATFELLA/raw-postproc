@@ -2,6 +2,7 @@
 #define COLORED_BAYER_H
 
 #include "base_debayer.h"
+#include "raw_utils.h"
 
 class colored_bayer : public base_debayer {
 public:

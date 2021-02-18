@@ -128,7 +128,7 @@ void MainWindow::on_comboBox_currentTextChanged(const QString &arg1) {
     deb = std::make_shared<colored_bayer>();
   }
   if (arg1 == "bilinear") {
-    deb = std::make_shared<simple_debayer>();
+    deb = std::make_shared<bilinear_debayer>();
   }
   if (arg1 == "mhc") {
     deb = std::make_shared<mhc_debayer>();

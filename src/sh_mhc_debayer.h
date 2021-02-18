@@ -1,9 +1,8 @@
 #ifndef SH_MHC_DEBAYER_H
 #define SH_MHC_DEBAYER_H
 
-#include <iostream>
-
 #include "base_debayer.h"
+#include "raw_utils.h"
 
 class sh_mhc_debayer : public base_debayer {
 public:
