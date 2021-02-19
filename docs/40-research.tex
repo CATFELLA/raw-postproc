@@ -1,6 +1,6 @@
 \chapter{Исследовательская часть}
 
-В данном разделе будут приведены примеры работы разработанного программного обеспечения, а также будет поставлен эксперимент, в котором будут сравнены скорость и качество алгоритмов.
+В данном разделе будут приведены примеры работы разработанного программного обеспечения, а также будет поставлен эксперимент, в котором будут сравнены скорость и качество алгоритмов. Тестовые кадры получены при помощи камеры Canon 650D.
 
 \section{Результаты работы программного обеспечения}
 
@@ -28,7 +28,7 @@
 		\resizebox{16cm}{!}{
 			\begin{tabular}{|c|c|c|c|c|}
 				\hline
-				\bfseries Разрешение & \bfseries Билинейная интерполяция & \bfseries Malvar-He-Cutler & \bfseries Smooth Hue Transition  & \bfseries Smooth Hue Transition + Malvar-He-Cutler \\
+				\bfseries Разрешение & \bfseries Bil & \bfseries MHC & \bfseries SHT  & \bfseries SHT + MHC \\
 				\hline
 				640x360 & 7955367 & 13021776 & 12675546 & 11940170 \\ \hline
 				1736*976 & 59383502 & 79846533 & 64410020 & 83702792 \\ \hline
@@ -45,7 +45,7 @@
 		\begin{axis}[
 			axis lines=left,
 			xlabel=Размер изображения,
-			ylabel={Время, нс},
+			ylabel={Тики},
 			legend pos=north west,
 			ymajorgrids=true
 			]
@@ -87,7 +87,7 @@
 Основной задачей алгоритмов демозаики является уменьшения воздействия фильтра Байера.
 
 \img{100mm}{bil_close}{Билинейная интерполяция.}
-\img{100mm}{mhc_close}{Malvar-He-Cutle.}
+\img{100mm}{mhc_close}{Malvar-He-Cutler.}
 \img{100mm}{sh_close}{Smooth hue transition.}
 \img{100mm}{shmhc_close}{Smooth hue transition + Malvar-He-Cutler.}
 \clearpage
@@ -128,7 +128,7 @@
 		\resizebox{16cm}{!}{
 			\begin{tabular}{|c|c|c|c|c|}
 				\hline
-				\bfseries Параметр & \bfseries Билинейная интерполяция & \bfseries Malvar-He-Cutler & \bfseries Smooth Hue Transition  & \bfseries Smooth Hue Transition + Malvar-He-Cutler \\
+				\bfseries Параметр & \bfseries Bil & \bfseries MHC & \bfseries SHT  & \bfseries SHT + MHC \\
 				\hline
 				Скорость (малое разрешение) & 1 & 4 & 3 & 2 \\ \hline
 				Скорость (большое разрешение) & 1 & 3 & 2 & 4 \\ \hline
