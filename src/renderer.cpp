@@ -31,7 +31,7 @@ void renderer::timed_render() {
 
 void renderer::single_render() {
   std::vector<float> *result = new std::vector<float>;
-  *result = _file->develop(*_debayer.get(), *_set.get());
+  *result = _file->develop(_debayer, _set);
 
   emit frame_ready(result);
 }

@@ -67,7 +67,7 @@ private slots:
 private:
   Ui::MainWindow *ui;
   QGraphicsScene *scene;
-  QImage *qimage;
+  QGraphicsPixmapItem *pixmapitem;
 
   std::shared_ptr<settings> set;
   std::shared_ptr<DNG_raw> seq;

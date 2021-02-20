@@ -78,8 +78,8 @@ void DNG_raw::set_frame(size_t frame) { frame_counter = frame; }
 
 int DNG_raw::get_white_level() { return images[frame_counter].white_level[0]; }
 
-std::vector<float> DNG_raw::develop(const base_debayer &debayer,
-                                    const class settings &settings) {
+std::vector<float> DNG_raw::develop(const std::shared_ptr<base_debayer> debayer,
+                                    const std::shared_ptr<settings> settings) {
   std::vector<uint16_t> unpacked = unpack(images[frame_counter]);
 
   std::vector<float> pre_color_corrected;
@@ -89,24 +89,24 @@ std::vector<float> DNG_raw::develop(const base_debayer &debayer,
       images[frame_counter].white_level[0]);
 
   std::vector<float> debayed =
-      debayer.debay(pre_color_corrected, images[frame_counter].width,
-                    images[frame_counter].height, settings.cfa_offset);
+      debayer->debay(pre_color_corrected, images[frame_counter].width,
+                     images[frame_counter].height, settings->cfa_offset);
 
   double srgb_color_matrix[3][3];
   compute_color_matrix(srgb_color_matrix, images[frame_counter],
-                       settings.raw_white_balance);
+                       settings->raw_white_balance);
 
   color_correction(debayed, images[frame_counter].width,
                    images[frame_counter].height, srgb_color_matrix);
 
   brightness(debayed, images[frame_counter].width, images[frame_counter].height,
-             settings.brightness);
+             settings->brightness);
 
   contrast(debayed, images[frame_counter].width, images[frame_counter].height,
-           settings.contrast);
+           settings->contrast);
 
   saturation(debayed, images[frame_counter].width, images[frame_counter].height,
-             settings.saturation);
+             settings->saturation);
 
   return debayed;
 }

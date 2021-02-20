@@ -7,6 +7,8 @@ MainWindow::MainWindow(QWidget *parent)
 
   scene = new QGraphicsScene(this);
 
+  pixmapitem = scene->addPixmap();
+
   qRegisterMetaType<std::vector<float> *>();
 
   deb = std::make_shared<colored_bayer>();
@@ -16,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() {
+  render_thread->stop_render();
+
   delete scene;
   delete ui;
 }
@@ -59,13 +63,12 @@ void MainWindow::handle_frame(std::vector<float> *frame) {
     }
   }
 
-  scene->addPixmap(QPixmap::fromImage(qimage));
+  QGraphicsPixmapItem *pixmap = scene->addPixmap(QPixmap::fromImage(qimage));
   ui->graphicsView->setScene(scene);
   ui->frame_slider->setValue(seq->get_frame_counter());
 
   ui->status->setText("Frame handled");
-
-  delete frame;
+  delete pixmap;
 }
 
 void MainWindow::on_save_button_clicked() {}

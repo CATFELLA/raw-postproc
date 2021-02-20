@@ -27,8 +27,8 @@ public:
   size_t get_frame_count() override;
   size_t get_frame_counter() override;
   void set_frame(size_t frame) override;
-  std::vector<float> develop(const base_debayer &debayer,
-                             const class settings &settings) override;
+  std::vector<float> develop(const std::shared_ptr<base_debayer> debayer,
+                             const std::shared_ptr<settings> settings) override;
 };
 
 #endif // DNG_RAW_H
