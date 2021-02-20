@@ -7,7 +7,8 @@ MainWindow::MainWindow(QWidget *parent)
 
   scene = new QGraphicsScene(this);
 
-  pixmapitem = scene->addPixmap();
+  pixmapitem = scene->addPixmap(pixmap);
+  ui->graphicsView->setScene(scene);
 
   qRegisterMetaType<std::vector<float> *>();
 
@@ -63,12 +64,13 @@ void MainWindow::handle_frame(std::vector<float> *frame) {
     }
   }
 
-  QGraphicsPixmapItem *pixmap = scene->addPixmap(QPixmap::fromImage(qimage));
-  ui->graphicsView->setScene(scene);
+  pixmapitem->setPixmap(QPixmap::fromImage(qimage));
+  ui->graphicsView->update();
   ui->frame_slider->setValue(seq->get_frame_counter());
 
   ui->status->setText("Frame handled");
-  delete pixmap;
+
+  delete frame;
 }
 
 void MainWindow::on_save_button_clicked() {}

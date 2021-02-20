@@ -3,9 +3,11 @@
 
 #include <QDebug>
 #include <QFileDialog>
+#include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QPixmap>
 #include <cmath>
 #include <iostream>
 
@@ -68,6 +70,7 @@ private:
   Ui::MainWindow *ui;
   QGraphicsScene *scene;
   QGraphicsPixmapItem *pixmapitem;
+  QPixmap pixmap;
 
   std::shared_ptr<settings> set;
   std::shared_ptr<DNG_raw> seq;
