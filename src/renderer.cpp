@@ -20,10 +20,23 @@ void renderer::set_settings(const std::shared_ptr<settings> &set) {
   _set = set;
 }
 
-void renderer::run() {
-  std::shared_ptr<std::vector<float>> result =
-      std::make_shared<std::vector<float>>();
+void renderer::timed_render() {
+  single_render();
+  _file->next_frame();
+
+  if (!stop) {
+    QTimer::singleShot(0, this, &renderer::timed_render);
+  }
+}
+
+void renderer::single_render() {
+  std::vector<float> *result = new std::vector<float>;
   *result = _file->develop(*_debayer.get(), *_set.get());
 
   emit frame_ready(result);
+}
+
+void renderer::run() {
+  stop = false;
+  QTimer::singleShot(0, this, &renderer::timed_render);
 }

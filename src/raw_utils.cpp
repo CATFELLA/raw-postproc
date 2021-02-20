@@ -1,6 +1,6 @@
 #include "raw_utils.h"
 
-inline int clamp(int x, int minx, int maxx) {
+int clamp(int x, int minx, int maxx) {
   if (x < minx)
     return minx;
   if (x > maxx)
@@ -25,7 +25,7 @@ static std::vector<uint16_t> unpack14(const unsigned char *data, int width,
   int bit_shifts[4] = {2, 4, 6, 0};
 
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, 1)
+#pragma omp parallel for
 #endif
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
@@ -71,7 +71,7 @@ static std::vector<uint16_t> unpack16(const unsigned char *data, int width,
   const uint16_t *ptr = reinterpret_cast<const uint16_t *>(data);
 
 #ifdef _OPENMP
-#pragma omp parallel for schedule(dynamic, 1)
+#pragma omp parallel for
 #endif
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
@@ -254,7 +254,37 @@ void contrast(std::vector<float> &in, int width, int height,
             fclamp((in[3 * (y * width + x) + 1] - 0.5) * contrast + 0.5, 0, 1);
         in[3 * (y * width + x) + 2] =
             fclamp((in[3 * (y * width + x) + 2] - 0.5) * contrast + 0.5, 0, 1);
-        // slow... (change fclamp to a modifying func
+      }
+    }
+  }
+}
+
+void saturation(std::vector<float> &in, int width, int height,
+                const double saturation) {
+  if (std::fabs(1 - saturation) > __DBL_EPSILON__) {
+    const double alpha = 0.3086 * (1 - saturation),
+                 beta = 0.06094 * (1 - saturation),
+                 gamma = 0.0820 * (1 - saturation);
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        in[3 * (y * width + x) + 0] =
+            fclamp(in[3 * (y * width + x) + 0] * (alpha + saturation) +
+                       in[3 * (y * width + x) + 1] * beta +
+                       in[3 * (y * width + x) + 2] * gamma,
+                   0, 1);
+        in[3 * (y * width + x) + 1] =
+            fclamp(in[3 * (y * width + x) + 0] * alpha +
+                       in[3 * (y * width + x) + 1] * (beta + saturation) +
+                       in[3 * (y * width + x) + 2] * gamma,
+                   0, 1);
+        in[3 * (y * width + x) + 2] =
+            fclamp(in[3 * (y * width + x) + 0] * alpha +
+                       in[3 * (y * width + x) + 1] * beta +
+                       in[3 * (y * width + x) + 2] * (gamma + saturation),
+                   0, 1);
       }
     }
   }

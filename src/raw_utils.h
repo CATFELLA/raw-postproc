@@ -8,9 +8,9 @@
 
 #include "../lib/tiny_dng_loader.h"
 
-inline int clamp(int x, int minx, int maxx);
+int clamp(int x, int minx, int maxx);
 
-inline float fetch(const std::vector<float> &in, int x, int y, int w, int h);
+float fetch(const std::vector<float> &in, int x, int y, int w, int h);
 
 std::vector<uint16_t> unpack(const tinydng::DNGImage &raw);
 
@@ -31,5 +31,8 @@ void brightness(std::vector<float> &in, int width, int height,
 
 void contrast(std::vector<float> &in, int width, int height,
               const double contrast);
+
+void saturation(std::vector<float> &in, int width, int height,
+                const double saturation);
 
 #endif // RAW_UTILS_H

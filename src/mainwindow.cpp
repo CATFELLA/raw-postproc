@@ -7,16 +7,18 @@ MainWindow::MainWindow(QWidget *parent)
 
   scene = new QGraphicsScene(this);
 
-  qRegisterMetaType<std::shared_ptr<std::vector<float>>>();
+  qRegisterMetaType<std::vector<float> *>();
 
   deb = std::make_shared<colored_bayer>();
   seq = std::make_shared<DNG_raw>();
 
   set = std::make_shared<settings>();
-  set->brightness = 0.1;
 }
 
-MainWindow::~MainWindow() { delete ui; }
+MainWindow::~MainWindow() {
+  delete scene;
+  delete ui;
+}
 
 void MainWindow::on_develop_button_clicked() {
   if (opened) {
@@ -27,19 +29,14 @@ void MainWindow::on_develop_button_clicked() {
               &MainWindow::handle_frame);
     }
 
-    render_thread->start();
+    render_thread->single_render();
     ui->status->setText("Start rendering");
   }
 }
 
-int i = 0;
-
-void MainWindow::handle_frame(std::shared_ptr<std::vector<float>> frame) {
+void MainWindow::handle_frame(std::vector<float> *frame) {
   int f_width = static_cast<int>(seq->get_width());
   int f_height = static_cast<int>(seq->get_height());
-
-  std::cout << "handling width=" << f_width << " height=" << f_height
-            << std::endl;
 
   QImage qimage(f_width, f_height, QImage::Format_RGBX64);
 
@@ -62,13 +59,13 @@ void MainWindow::handle_frame(std::shared_ptr<std::vector<float>> frame) {
     }
   }
 
-  scene->addPixmap(QPixmap::fromImage(qimage).scaled(
-      ui->graphicsView->width() - 2, ui->graphicsView->height() - 2,
-      Qt::KeepAspectRatio));
-  qimage.save("frame" + QString::number(i) + ".png");
-  i++;
+  scene->addPixmap(QPixmap::fromImage(qimage));
   ui->graphicsView->setScene(scene);
+  ui->frame_slider->setValue(seq->get_frame_counter());
+
   ui->status->setText("Frame handled");
+
+  delete frame;
 }
 
 void MainWindow::on_save_button_clicked() {}
@@ -90,6 +87,8 @@ void MainWindow::on_actionOpen_DNG_triggered() {
   }
 
   opened = true;
+  ui->frame_slider->setMaximum(seq->get_frame_count() - 1);
+
   ui->status->setText("File loaded");
 
   emit ui->develop_button->clicked();
@@ -98,7 +97,7 @@ void MainWindow::on_actionOpen_DNG_triggered() {
 void MainWindow::on_actionExit_triggered() { QApplication::quit(); }
 
 void MainWindow::on_brightness_slider_sliderReleased() {
-  set->brightness = ui->brightness_slider->value() / 100.;
+  set->brightness = ui->brightness_slider->value() / 300.;
 
   emit ui->develop_button->clicked();
 }
@@ -151,5 +150,31 @@ void MainWindow::on_comboBox_currentTextChanged(const QString &arg1) {
 
     ui->status->setText("Tests finished");
   */
+  emit ui->develop_button->clicked();
+}
+
+void MainWindow::on_play_button_clicked() {
+  if (opened) {
+
+    if (ui->play_button->text() == "Play") {
+      render_thread->start();
+      ui->play_button->setText("Stop");
+    } else {
+      render_thread->stop_render();
+      ui->play_button->setText("Play");
+    }
+  }
+}
+
+void MainWindow::on_frame_slider_sliderReleased() {
+  seq->set_frame(ui->frame_slider->value());
+
+  emit ui->develop_button->clicked();
+}
+
+void MainWindow::on_R_slider_2_sliderReleased() {
+  set->saturation = ui->R_slider_2->value() /
+                    static_cast<double>(ui->R_slider_2->maximum() / 2);
+
   emit ui->develop_button->clicked();
 }

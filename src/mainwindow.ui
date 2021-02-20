@@ -20,14 +20,14 @@
       <x>3</x>
       <y>0</y>
       <width>1711</width>
-      <height>951</height>
+      <height>901</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="develop_button">
     <property name="geometry">
      <rect>
-      <x>1760</x>
+      <x>1780</x>
       <y>10</y>
       <width>80</width>
       <height>23</height>
@@ -69,7 +69,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Contrast</string>
+     <string>Контраст</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -85,7 +85,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Tint</string>
+     <string>Оттенок</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -161,7 +161,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Brightness</string>
+     <string>Яркость</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -177,10 +177,10 @@
      </rect>
     </property>
     <property name="minimum">
-     <number>-200</number>
+     <number>-50</number>
     </property>
     <property name="maximum">
-     <number>200</number>
+     <number>50</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -240,7 +240,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Color temperature</string>
+     <string>Температура света</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -307,6 +307,82 @@
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="play_button">
+    <property name="geometry">
+     <rect>
+      <x>1770</x>
+      <y>400</y>
+      <width>80</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Play</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="frame_slider">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>910</y>
+      <width>1701</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>0</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QSlider" name="R_slider_2">
+    <property name="geometry">
+     <rect>
+      <x>1730</x>
+      <y>270</y>
+      <width>160</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>0</number>
+    </property>
+    <property name="maximum">
+     <number>200</number>
+    </property>
+    <property name="singleStep">
+     <number>1</number>
+    </property>
+    <property name="value">
+     <number>100</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="invertedAppearance">
+     <bool>false</bool>
+    </property>
+    <property name="invertedControls">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>1750</x>
+      <y>250</y>
+      <width>121</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Насыщенность</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -314,7 +390,7 @@
      <x>0</x>
      <y>0</y>
      <width>1920</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

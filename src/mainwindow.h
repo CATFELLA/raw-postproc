@@ -14,6 +14,7 @@
 #define TINY_DNG_NO_EXCEPTION
 
 #include "../lib/tiny_dng_loader.h"
+#include "bilinear_debayer.h"
 #include "colored_bayer.h"
 #include "dng_raw.h"
 #include "mhc_debayer.h"
@@ -21,7 +22,6 @@
 #include "settings.h"
 #include "sh_debayer.h"
 #include "sh_mhc_debayer.h"
-#include "bilinear_debayer.h"
 #include "timer.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -38,7 +38,7 @@ public:
   ~MainWindow() override;
 
 private slots:
-  void handle_frame(std::shared_ptr<std::vector<float>> frame);
+  void handle_frame(std::vector<float> *frame);
 
   void on_develop_button_clicked();
 
@@ -58,9 +58,16 @@ private slots:
 
   void on_comboBox_currentTextChanged(const QString &arg1);
 
+  void on_play_button_clicked();
+
+  void on_frame_slider_sliderReleased();
+
+  void on_R_slider_2_sliderReleased();
+
 private:
   Ui::MainWindow *ui;
   QGraphicsScene *scene;
+  QImage *qimage;
 
   std::shared_ptr<settings> set;
   std::shared_ptr<DNG_raw> seq;

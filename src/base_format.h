@@ -16,6 +16,9 @@ public:
   virtual size_t get_width() = 0;
   virtual size_t get_height() = 0;
   virtual int get_white_level() = 0;
+  virtual size_t get_frame_count() = 0;
+  virtual size_t get_frame_counter() = 0;
+  virtual void set_frame(size_t frame) = 0;
   virtual std::vector<float> develop(const base_debayer &debayer,
                                      const class settings &settings) = 0;
 };

@@ -17,10 +17,11 @@ public:
     this->cfa_offset[0] = 0;
     this->cfa_offset[1] = 0;
 
-    this->saturation = 0.0;
+    this->saturation = 1.0;
     this->brightness = 0.0;
     this->contrast = 1.0;
   }
+  ~settings() {}
 };
 
 #endif // SETTINGS_H
