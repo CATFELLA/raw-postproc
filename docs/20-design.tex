@@ -14,7 +14,7 @@
 
 К программе применяются следующие ограничения:
 \begin{itemize}
-	\item фильтра Байера в формате RGGB;
+	\item фильтр Байера в формате RGGB;
 	\item изображения в формате DNG;
 	\item глубина цвета 14 или 16 бит.	
 \end{itemize}
@@ -26,7 +26,7 @@
 	\label{alg:bilin}
 	\begin{algorithmic}[1]
 		\State $in$ $\gets$ вектор с данными с сенсора камеры
-		\State $height$ $\gets$ высота изображения $DomColor$
+		\State $height$ $\gets$ высота изображения
 		\State $width$ $\gets$ ширина изображения
 		\State $out$ $\gets$ вектор с интерполированными цветами
 		\For{$y \gets 0$ to $height$}
@@ -63,7 +63,7 @@
 	\label{alg:mhc1}
 	\begin{algorithmic}[1]
 		\State $in$ $\gets$ вектор с данными с сенсора камеры
-		\State $height$ $\gets$ высота изображения $DomColor$
+		\State $height$ $\gets$ высота изображения
 		\State $width$ $\gets$ ширина изображения
 		\State $out$ $\gets$ вектор с интерполированными цветами
 		\State $\alpha$ $\gets$ $\frac{1}{2}$
@@ -113,7 +113,7 @@
 	\label{alg:mhc1}
 	\begin{algorithmic}[1]
 		\State $in$ $\gets$ вектор с данными с сенсора камеры
-		\State $height$ $\gets$ высота изображения $DomColor$
+		\State $height$ $\gets$ высота изображения
 		\State $width$ $\gets$ ширина изображения
 		\State $out$ $\gets$ вектор с интерполированными цветами
 		\State $\alpha$ $\gets$ $\frac{1}{2}$

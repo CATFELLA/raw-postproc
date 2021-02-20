@@ -139,17 +139,6 @@ void MainWindow::on_comboBox_currentTextChanged(const QString &arg1) {
     deb = std::make_shared<sh_mhc_debayer>();
   }
 
-  /*#define TESTS 100
-    uint64_t start = tick();
-    for (int i = 0; i < TESTS; i++) {
-      seq->develop(*deb, *set);
-    }
-    uint64_t time = (tick() - start) / TESTS;
-
-    std::cout << arg1.toStdString() << " timed = " << time << std::endl;
-
-    ui->status->setText("Tests finished");
-  */
   emit ui->develop_button->clicked();
 }
 
